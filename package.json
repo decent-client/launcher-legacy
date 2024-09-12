@@ -11,11 +11,6 @@
     "prepare": "husky",
     "typecheck": "tsc"
   },
-  "lint-staged": {
-    "*.{js,ts,jsx,tsx,json}": [
-      "biome check --write --no-errors-on-unmatched"
-    ]
-  },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-dialog": "^1.1.1",
