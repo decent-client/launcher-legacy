@@ -43,7 +43,6 @@ export default function Settings() {
     });
 
     return () => unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function resetForm() {
@@ -92,15 +91,15 @@ function Sidebar() {
   return (
     <article className="overflow-hidden">
       <h1 className="ml-8 font-mono text-xl font-bold">Settings</h1>
-      <nav className="mt-1 flex-grow flex flex-col gap-y-0.5">
+      <nav className="mt-1 flex flex-grow flex-col gap-y-0.5">
         {settingsTabs.map((tab) => {
           return (
             <Button
               key={tab.title}
               className={cn(
-                "ml-6 h-7 w-full justify-start gap-3 rounded-s-full rounded-e-none transition-[margin] hover:ml-7",
+                "ml-6 h-7 w-full justify-start gap-3 rounded-e-none rounded-s-full transition-[margin] hover:ml-7",
                 {
-                  "text-blue-500 hover:text-blue-500 bg-accent/50 ml-7 hover:ml-8":
+                  "ml-7 bg-accent/50 text-blue-500 hover:ml-8 hover:text-blue-500":
                     settingsTab === tab.value,
                   "mt-auto": tab.value === "resources",
                 },
@@ -110,7 +109,7 @@ function Sidebar() {
               onClick={() => setSettingsTab(tab.value)}
             >
               {tab.icon}
-              <span className="font-medium text-base">{tab.title}</span>
+              <span className="text-base font-medium">{tab.title}</span>
             </Button>
           );
         })}
