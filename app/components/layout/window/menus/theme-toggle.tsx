@@ -17,7 +17,7 @@ import {
 import { cn } from "~/lib/utils";
 
 import { titleCase } from "string-ts";
-import { Theme, useTheme } from "~/lib/providers/theme-provider";
+import { type Theme, useTheme } from "~/lib/providers/theme-provider";
 
 const classNameItem = "gap-x-2 cursor-pointer";
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { SkinViewer, SkinViewerOptions } from "skinview3d";
+import { SkinViewer, type SkinViewerOptions } from "skinview3d";
 
 const ReactSkinview3d = ({
   className,

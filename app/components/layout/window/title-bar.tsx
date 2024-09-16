@@ -1,6 +1,6 @@
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import {
-  UIMatch,
+  type UIMatch,
   useLocation,
   useMatches,
   useNavigate,
@@ -141,7 +141,7 @@ function CaptionButton({
       (window) => window.label === getCurrentWindow().label,
     );
 
-  let buttonKey: string = "minimizable";
+  let buttonKey = "minimizable";
   switch (buttonType) {
     case "minimize":
       buttonKey = "minimizable";

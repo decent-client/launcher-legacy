@@ -1,4 +1,4 @@
-import { Outlet, UIMatch, useMatches } from "@remix-run/react";
+import { Outlet, type UIMatch, useMatches } from "@remix-run/react";
 import { LayoutCard } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 
@@ -12,21 +12,22 @@ export default function LauncherLayout() {
     ({ handle }) => handle?.sidebar,
   );
 
+  console.log(matches);
+
   return (
     <main
-      className={cn("grid mt-8  overflow-hidden", {
+      className={cn("mt-8 grid overflow-hidden", {
         "grid-cols-layout": matches.length > 0,
       })}
-      // eslint-disable-next-line react/no-unknown-property
       vaul-drawer-wrapper=""
     >
       {matches.length > 0 && (
-        <aside className="mt-2 relative mb-8 flex flex-col overflow-hidden">
+        <aside className="relative mt-2 mb-8 flex flex-col overflow-hidden">
           {matches.find(({ handle }) => handle?.sidebar)?.handle.sidebar()}
         </aside>
       )}
       <LayoutCard
-        className={cn("flex flex-col pb-0 overflow-hidden", {
+        className={cn("flex flex-col overflow-hidden pb-0", {
           "rounded-ss-none border-l-0": matches.length < 1,
         })}
       >

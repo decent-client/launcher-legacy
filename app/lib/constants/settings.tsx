@@ -6,7 +6,7 @@ import {
   Rocket,
 } from "lucide-react";
 import { z } from "zod";
-import { SettingsTab } from "~/lib/providers/settings-provider";
+import type { SettingsTab } from "~/lib/providers/settings-provider";
 
 export type Settings = z.infer<typeof settingsSchema> &
   Partial<Record<keyof z.infer<typeof settingsSchema>, unknown>>;

@@ -9,7 +9,7 @@ import {
 import { createContext, useContext, useEffect, useState } from "react";
 import { useSessionStorage } from "~/hooks/session-storage";
 import {
-  Settings,
+  type Settings,
   initialSettings as defaultSettings,
 } from "~/lib/constants/settings";
 import { deepMerge } from "~/lib/utils";

@@ -1,5 +1,5 @@
 import type { UseFormReturn } from "react-hook-form";
-import { Settings } from "~/lib/constants/settings";
+import type { Settings } from "~/lib/constants/settings";
 import { cn } from "~/lib/utils";
 
 export function Notifications({

@@ -9,6 +9,7 @@
     "tauri:dev": "tauri dev",
     "format": "biome format --write ./app",
     "lint": "biome lint --write ./app",
+    "check": "biome check --write ./app",
     "typecheck": "tsc",
     "prepare": "husky"
   },

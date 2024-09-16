@@ -1,7 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { Cpu, Proportions } from "lucide-react";
 import { useEffect, useState } from "react";
-import { type UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Slider } from "~/components/ui/slider";
-import { Settings } from "~/lib/constants/settings";
+import type { Settings } from "~/lib/constants/settings";
 import { cn } from "~/lib/utils";
 
 export function Preferences({
