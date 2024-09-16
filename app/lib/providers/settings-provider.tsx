@@ -7,7 +7,7 @@ import {
   writeTextFile,
 } from "@tauri-apps/plugin-fs";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useLocalStorage } from "~/hooks/local-storage";
+import { useSessionStorage } from "~/hooks/session-storage";
 import {
   Settings,
   initialSettings as defaultSettings,
@@ -48,7 +48,7 @@ export function SettingsProvider({
   initialSettings?: Settings;
   settingsFile?: FileNameJSON;
 }) {
-  const [settingsTab, setSettingsTab] = useLocalStorage<SettingsTab>(
+  const [settingsTab, setSettingsTab] = useSessionStorage<SettingsTab>(
     tabStorageKey,
     "preferences",
   );

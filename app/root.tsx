@@ -7,7 +7,6 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import { WindowTitleBar } from "~/components/layout";
-import { Toaster } from "~/components/ui/sonner";
 import { Providers } from "~/lib/providers";
 import { cn } from "~/lib/utils";
 
@@ -20,12 +19,21 @@ export const links: LinksFunction = () => [
 export default function App() {
   return (
     <Providers>
-      <Layout />
+      <Document>
+        <WindowTitleBar />
+        <Outlet />
+      </Document>
     </Providers>
   );
 }
 
-function Layout({ className }: { className?: string }) {
+function Document({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <head>
@@ -40,15 +48,7 @@ function Layout({ className }: { className?: string }) {
           className,
         )}
       >
-        <WindowTitleBar />
-        <Outlet />
-        <Toaster
-          position="bottom-right"
-          theme="dark"
-          offset={16}
-          gap={8}
-          richColors
-        />
+        {children}
         <ScrollRestoration />
         <Scripts />
       </body>

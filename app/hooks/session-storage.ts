@@ -1,10 +1,10 @@
 import { useCallback, useState } from "react";
 
-export const useLocalStorage = <T>(key: string, initialValue: T) => {
+export function useSessionStorage<T>(key: string, initialValue: T) {
   const [storedValue, setStoredValue] = useState<T | undefined>(() => {
     try {
       if (typeof window !== "undefined") {
-        const item = window.localStorage.getItem(key);
+        const item = window.sessionStorage.getItem(key);
         return item !== null ? JSON.parse(item) : initialValue;
       }
     } catch (error) {
@@ -17,7 +17,7 @@ export const useLocalStorage = <T>(key: string, initialValue: T) => {
     (value: T) => {
       try {
         if (typeof window !== "undefined") {
-          window.localStorage.setItem(key, JSON.stringify(value));
+          window.sessionStorage.setItem(key, JSON.stringify(value));
           setStoredValue(value);
         }
       } catch (error) {
@@ -29,10 +29,10 @@ export const useLocalStorage = <T>(key: string, initialValue: T) => {
 
   const removeStoredValue = () => {
     if (typeof window !== "undefined") {
-      window.localStorage.removeItem(key);
+      window.sessionStorage.removeItem(key);
       setStoredValue(undefined);
     }
   };
 
   return [storedValue as T, setValue, removeStoredValue] as const;
-};
+}

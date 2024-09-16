@@ -1,10 +1,10 @@
 import { useCallback, useRef } from "react";
 
-export const useDebouncedCallback = <T extends unknown[]>(
+export function useDebouncedCallback<T extends unknown[]>(
   func: (...args: T) => unknown,
-  wait: number
-) => {
-  const timeout = useRef<NodeJS.Timeout>();
+  wait: number,
+) {
+  const timeout = useRef<ReturnType<typeof setTimeout>>();
 
   return useCallback(
     (...args: T) => {
@@ -16,6 +16,6 @@ export const useDebouncedCallback = <T extends unknown[]>(
       clearTimeout(timeout.current);
       timeout.current = setTimeout(later, wait);
     },
-    [func, wait]
+    [func, wait],
   );
-};
+}

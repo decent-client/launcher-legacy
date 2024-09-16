@@ -17,20 +17,19 @@ import { cn } from "~/lib/utils";
 
 export function NewsFeed({ className }: Readonly<{ className?: string }>) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { launcherLayout, setLauncherLayout } = useLauncherLayout();
+  const {
+    newsFeedSection: { scrollY },
+    setNewsFeedSection,
+  } = useLauncherLayout();
   const [selectedOption, setSelectedOption] = useLocalStorage(
     "news-sort-option",
     "latest",
   );
 
-  const {
-    newsFeed: { scrollY },
-  } = launcherLayout;
-
   useEffect(() => {
     function handleScroll() {
-      setLauncherLayout({
-        newsFeed: { scrollY: currentScrollRef?.scrollTop ?? 0 },
+      setNewsFeedSection({
+        scrollY: currentScrollRef?.scrollTop ?? 0,
       });
     }
 
@@ -45,7 +44,7 @@ export function NewsFeed({ className }: Readonly<{ className?: string }>) {
         currentScrollRef.removeEventListener("scroll", handleScroll);
       }
     };
-  }, [setLauncherLayout]);
+  }, [setNewsFeedSection]);
 
   return (
     <motion.article
@@ -62,9 +61,9 @@ export function NewsFeed({ className }: Readonly<{ className?: string }>) {
         }}
       >
         <h1 className="font-mono text-lg font-bold">{"News Feed"}</h1>
-        <span className="font-bold ml-4">&#8212;</span>
+        <span className="ml-4 font-bold">&#8212;</span>
         <Select defaultValue={selectedOption} onValueChange={setSelectedOption}>
-          <SelectTrigger className="gap-x-2 font-bold font-mono text-lg size-auto ml-2 px-2 py-0.5 border-none bg-transparent">
+          <SelectTrigger className="ml-2 size-auto gap-x-2 border-none bg-transparent px-2 py-0.5 font-mono text-lg font-bold">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -78,13 +77,10 @@ export function NewsFeed({ className }: Readonly<{ className?: string }>) {
         className="mt-1.5 h-12 flex-grow rounded-lg"
         hideScrollBar
       >
-        <div className="grid  grid-cols-3 gap-2 rounded-[inherit]">
+        <div className="grid grid-cols-3 gap-2 rounded-[inherit]">
           {Array.from({ length: 100 }).map((_, i) => (
             <Card
-              key={`card${
-                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                i
-              }`}
+              key={`card${i}`}
               className="grid border-b border-none bg-card/50"
             >
               <Card className="aspect-[24/10]" />

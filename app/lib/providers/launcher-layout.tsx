@@ -1,14 +1,12 @@
 import { createContext, useContext, useMemo, useState } from "react";
 
 type Options = {
-  newsFeed: {
-    scrollY: number;
-  };
+  scrollY: number;
 };
 
 type LauncherLayoutContext = {
-  launcherLayout: Options;
-  setLauncherLayout: (options: Options) => void;
+  newsFeedSection: Options;
+  setNewsFeedSection: (options: Options) => void;
 };
 
 const LauncherLayout = createContext<LauncherLayoutContext | null>(null);
@@ -18,15 +16,15 @@ export function LauncherLayoutProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [launcherLayout, setLauncherLayout] = useState<Options>({
-    newsFeed: { scrollY: 0 },
+  const [newsFeedSection, setNewsFeedSection] = useState<Options>({
+    scrollY: 0,
   });
 
   return (
     <LauncherLayout.Provider
       value={useMemo(
-        () => ({ launcherLayout, setLauncherLayout }),
-        [launcherLayout],
+        () => ({ newsFeedSection, setNewsFeedSection }),
+        [newsFeedSection, setNewsFeedSection],
       )}
     >
       {children}

@@ -15,11 +15,9 @@ const MotionCard = motion.create(Card);
 const MotionButton = motion.create(Button);
 
 export function LauncherCard({ className }: Readonly<{ className?: string }>) {
-  const { launcherLayout } = useLauncherLayout();
-
   const {
-    newsFeed: { scrollY },
-  } = launcherLayout;
+    newsFeedSection: { scrollY },
+  } = useLauncherLayout();
 
   return (
     <MotionCard
@@ -42,7 +40,7 @@ export function LauncherCard({ className }: Readonly<{ className?: string }>) {
       }}
     >
       <Backdrop />
-      <article className="relative overflow-hidden z-10 grid place-items-center">
+      <article className="relative z-10 grid place-items-center overflow-hidden">
         <motion.div
           className="absolute bg-transparent"
           animate={{
@@ -80,18 +78,18 @@ function LaunchButton({
 }>) {
   return (
     <MotionButton
-      className="absolute flex items-center hover:scale-[1.0175] active:scale-[0.975] transition-transform gap-x-4 h-auto pl-5 py-2.5 pr-7 rounded-xl"
+      className="absolute flex h-auto items-center gap-x-4 rounded-xl py-2.5 pl-5 pr-7 transition-transform hover:scale-[1.0175] active:scale-[0.975]"
       animate={{
         marginTop: center ? "0" : "9rem",
       }}
       variant={"outline"}
     >
       <Rocket className="stroke-blue-500" size={36} strokeWidth={1.75} />
-      <div className="text-left whitespace-nowrap text-foreground flex flex-col">
+      <div className="flex flex-col whitespace-nowrap text-left text-foreground">
         <h1 className="font-mono text-lg font-bold leading-5 tracking-tight">
           Launch Minecraft
         </h1>
-        <p className="leading-4 text-muted-foreground font-sans text-xs italic tracking-wide">
+        <p className="font-sans text-xs italic leading-4 tracking-wide text-muted-foreground">
           on game version 1.8.9
         </p>
       </div>
@@ -101,7 +99,7 @@ function LaunchButton({
 
 function Backdrop() {
   return (
-    <div className="absolute rounded-[inherit]  inset-0 overflow-hidden">
+    <div className="absolute inset-0 overflow-hidden rounded-[inherit]">
       {/* <SparklesCore
         background="transparent"
         minSize={0.6}
@@ -110,7 +108,7 @@ function Backdrop() {
         className="absolute inset-0 blur-sm"
         particleColor="#FFFFFF"
       /> */}
-      <span className="pointer-events-none absolute  inset-0 rounded-[inherit] backdrop-blur-sm" />
+      <span className="pointer-events-none absolute inset-0 rounded-[inherit] backdrop-blur-sm" />
       {/* <div className="absolute inset-0">
         <Spline scene="https://prod.spline.design/jkiOe6OSWymmKUMb/scene.splinecode" />
         <div className="absolute inset-0  opacity-20 mix-blend-multiply z-0" />
