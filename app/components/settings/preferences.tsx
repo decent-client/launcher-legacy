@@ -2,6 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { Cpu, Proportions } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 import {
@@ -64,11 +65,11 @@ export function Preferences({
 								onClick={(event) => {
 									event.preventDefault();
 									if (value === 4096) {
-										//return toast.warning("4096 MB of ram is already allocated");
+										return toast.warning("4096 MB of ram is already allocated");
 									}
 
 									onChange(4096);
-									// toast.success("4096 MB of ram has been allocated");
+									toast.success("4096 MB of ram has been allocated");
 								}}
 							>
 								<Cpu size={14} />

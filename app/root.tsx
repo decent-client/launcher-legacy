@@ -7,13 +7,16 @@ import {
 	ScrollRestoration,
 } from "@remix-run/react";
 import { WindowTitleBar } from "~/components/layout/title-bar";
+import { Toaster } from "~/components/ui/sonner";
 import { Providers } from "~/lib/providers";
 import { cn } from "~/lib/utils";
 
-import tailwind from "~/tailwind.css?url";
+import sonner from "~/styles/sonner.css?url";
+import tailwind from "~/styles/tailwind.css?url";
 
 export const links: LinksFunction = () => [
 	{ rel: "stylesheet", href: tailwind },
+	{ rel: "stylesheet", href: sonner },
 ];
 
 export default function App() {
@@ -22,6 +25,13 @@ export default function App() {
 			<Document>
 				<WindowTitleBar />
 				<Outlet />
+				<Toaster
+					position="bottom-right"
+					theme="dark"
+					offset={16}
+					gap={8}
+					richColors
+				/>
 			</Document>
 		</Providers>
 	);
@@ -44,7 +54,7 @@ function Document({
 			</head>
 			<body
 				className={cn(
-					"relative grid h-screen min-h-screen select-none overflow-hidden font-sans antialiased",
+					"relative flex h-screen min-h-screen select-none flex-col overflow-hidden font-sans antialiased",
 					className,
 				)}
 			>

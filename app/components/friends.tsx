@@ -65,7 +65,7 @@ export function FriendList({ className }: { className?: string }) {
 	const openMessageWindow = useCallback(
 		async (user?: string) => {
 			if (cooldownRef.current) {
-				alert("Please wait a moment.");
+				toast.error("Please wait a moment.");
 				return;
 			}
 
