@@ -1,120 +1,278 @@
+import {
+	WebviewWindow,
+	getAllWebviewWindows,
+} from "@tauri-apps/api/webviewWindow";
+import { AnimatePresence, motion } from "framer-motion";
 import { Circle, Plus, Star } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
+	Command,
+	CommandEmpty,
+	CommandInput,
+	CommandItem,
+	CommandList,
 } from "~/components/ui/command";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { cn } from "~/lib/utils";
 
 const friends = [
-  {
-    skin: "https://skins.mcstats.com/face/f25075b4-3c7a-43c2-8a40-f58adedbe46a",
-    username: "liqws_wife",
-    favorite: true,
-    online: true,
-  },
-  {
-    skin: "https://skins.mcstats.com/face/a4e6e3d14d6149e59b190f5e8a7454c9",
-    username: "Alosted",
-  },
-  {
-    skin: "https://skins.mcstats.com/face/1c682784-a9cc-43bd-8007-3aa2e3878712",
-    username: "liqwtf",
-    online: true,
-  },
-  {
-    skin: "https://skins.mcstats.com/face/c4e8cb39-3e02-4f71-bf9f-65ecfeb087f9",
-    username: "MMMMMMMMMMMMMMMM",
-  },
-  {
-    skin: "https://skins.mcstats.com/face/64bc1be8-e903-4f18-8884-0bcda6153432",
-    username: "nicalae",
-    favorite: true,
-  },
+	{
+		skin: "https://skins.mcstats.com/face/f25075b4-3c7a-43c2-8a40-f58adedbe46a",
+		username: "liqws_wife",
+		favorite: true,
+		online: true,
+		playing: "Hypixel",
+	},
+	{
+		skin: "https://skins.mcstats.com/face/a4e6e3d14d6149e59b190f5e8a7454c9",
+		username: "Alosted",
+	},
+	{
+		skin: "https://skins.mcstats.com/face/1c682784-a9cc-43bd-8007-3aa2e3878712",
+		username: "liqwtf",
+		online: true,
+		playing: "Hypixel",
+	},
+	{
+		skin: "https://skins.mcstats.com/face/c4e8cb39-3e02-4f71-bf9f-65ecfeb087f9",
+		username: "MMMMMMMMMMMMMMMMMM",
+	},
+	{
+		skin: "https://skins.mcstats.com/face/64bc1be8-e903-4f18-8884-0bcda6153432",
+		username: "nicalae",
+		favorite: true,
+	},
 ];
 
-export function AddFriendButton({
-  className,
-}: Readonly<{ className?: string }>) {
-  return (
-    <Button className={cn("size-7", className)} size={"icon"} variant={"ghost"}>
-      <Plus size={20} strokeWidth={3} />
-    </Button>
-  );
+const MotionCircle = motion(Circle, { forwardMotionProps: true });
+
+export function AddFriendButton({ className }: { className?: string }) {
+	return (
+		<Button className={cn("size-7", className)} size={"icon"} variant={"ghost"}>
+			<Plus size={20} strokeWidth={3} />
+		</Button>
+	);
 }
 
-export function FriendList({ className }: Readonly<{ className?: string }>) {
-  const sortedFriends = friends.sort((a, b) => {
-    if (a.favorite && !b.favorite) {
-      return -1;
-    }
+export function FriendList({ className }: { className?: string }) {
+	const [openWindowUser, setOpenWindowUser] = useState<string | undefined>(
+		undefined,
+	);
+	const cooldownRef = useRef<NodeJS.Timeout | null>(null);
 
-    if (!a.favorite && b.favorite) {
-      return 1;
-    }
+	const openMessageWindow = useCallback(
+		async (user?: string) => {
+			if (cooldownRef.current) {
+				alert("Please wait a moment.");
+				return;
+			}
 
-    return 0;
-  });
+			cooldownRef.current = setTimeout(() => {
+				cooldownRef.current = null;
+			}, 2000);
 
-  return (
-    <Command
-      className={cn(
-        "mt-1 h-auto w-64 overflow-hidden bg-transparent",
-        className,
-      )}
-    >
-      <CommandInput
-        className="mb-1 ml-8 mr-2 h-7 rounded-lg border-none bg-background/25 backdrop-blur-sm"
-        placeholder={"Search for friends..."}
-      />
-      <ScrollArea className="rounded-none ">
-        <CommandList className="overflow-hidden w-64">
-          {sortedFriends.map((friend) => (
-            <CommandItem
-              key={friend.username}
-              className={cn(
-                "group/friend max-w-64 w-full relative rounded-none p-0 aria-selected:bg-transparent",
-              )}
-            >
-              <Button
-                className="relative ml-9 flex h-7 w-full max-w-64 items-center justify-start gap-2 rounded-e-none p-1 pr-0 transition-[margin] group-hover/friend:ml-10 group-hover/friend:bg-accent"
-                variant={"ghost"}
-              >
-                {friend.favorite && (
-                  <Star
-                    className="absolute -left-5 fill-yellow-500 stroke-yellow-500 transition-[left] group-hover/friend:-left-6"
-                    size={14}
-                  />
-                )}
-                <img
-                  src={friend.skin}
-                  className="rounded-sm"
-                  alt="Face"
-                  width={20}
-                  height={20}
-                />
-                <span className="font-minecraft truncate text-base leading-5">
-                  {friend.username}
-                </span>
-                <Circle
-                  className={cn(
-                    "mr-2 min-w-fit",
-                    friend.online
-                      ? "fill-green-500 text-green-500"
-                      : "fill-red-500 text-red-500",
-                  )}
-                  size={6}
-                />
-              </Button>
-            </CommandItem>
-          ))}
-          <CommandEmpty>{"No friends found"}</CommandEmpty>
-        </CommandList>
-      </ScrollArea>
-    </Command>
-  );
+			const openWindow = (await getAllWebviewWindows()).find(
+				(window) => window.label === "messages",
+			);
+
+			if (openWindow && openWindowUser !== user) {
+				await openWindow.close();
+			}
+
+			if (openWindow && openWindowUser === user) {
+				await openWindow.setFocus();
+			}
+
+			setOpenWindowUser(user);
+
+			new WebviewWindow("messages", {
+				url: `/messages/${user}`,
+				title: `Messages with ${user}`,
+				width: 382,
+				height: 564,
+				hiddenTitle: true,
+				center: true,
+				decorations: false,
+				transparent: true,
+			});
+		},
+		[openWindowUser],
+	);
+
+	return (
+		<Command
+			className={cn(
+				"mt-1 h-auto w-64 max-w-64 overflow-hidden rounded-none bg-transparent",
+				className,
+			)}
+		>
+			<CommandInput
+				className="mr-2 mb-1 ml-8 h-7 rounded-lg border-none bg-background/25 backdrop-blur-sm"
+				placeholder={"Search for friends..."}
+			/>
+			<ScrollArea className="rounded-none ">
+				<CommandList className="ml-8 max-h-96 w-56">
+					{friends.map((friend) => {
+						const [isHovering, setIsHovering] = useState(false);
+
+						const keywords = [
+							friend.username,
+							friend.online ? "online" : "offline",
+							friend.playing,
+							friend.favorite && "favorite best",
+						].filter(Boolean);
+
+						return (
+							<CommandItem
+								key={friend.username}
+								className={cn(
+									"grid h-7 max-w-56 cursor-pointer gap-x-2 overflow-hidden rounded-md rounded-e-none p-1 transition-all hover:ml-1 hover:h-11",
+								)}
+								style={{
+									gridTemplateColumns: "20px 1fr 12px",
+								}}
+								onSelect={() => openMessageWindow(friend.username)}
+								onMouseEnter={() => setIsHovering(true)}
+								onMouseLeave={() => setIsHovering(false)}
+								value={keywords.join(" ")}
+							>
+								{/* {friend.favorite && (
+									<Star
+										className=" fill-yellow-500 stroke-yellow-500"
+										style={{
+											top: 7,
+										}}
+										size={14}
+									/>
+								)} */}
+								<img
+									src={friend.skin}
+									className="z-50 rounded-sm"
+									alt="Face"
+									width={20}
+									height={20}
+								/>
+								<h1 className="truncate font-minecraft text-base leading-4">
+									{friend.username}
+								</h1>
+								<AnimatePresence mode="wait">
+									{isHovering && (
+										<MotionCircle
+											key={`${friend.username}-online`}
+											className={cn(
+												"col-start-1 row-start-2 justify-self-end",
+												friend.online
+													? "fill-green-500 text-green-500"
+													: "fill-red-500 text-red-500",
+											)}
+											initial={{ y: -24, opacity: 0 }}
+											animate={{ y: 0, opacity: 1 }}
+											exit={{ y: -24, opacity: 0 }}
+											transition={{
+												y: { type: "spring", bounce: 0 },
+												opacity: { duration: 0.2 },
+											}}
+											size={6}
+										/>
+									)}
+									{isHovering && (
+										<motion.p
+											key={`${friend.username}-playing`}
+											className="col-start-2 row-start-2 text-muted-foreground text-xs italic leading-4"
+											initial={{ x: 256, opacity: 0 }}
+											animate={{ x: 0, opacity: 1 }}
+											exit={{ x: 256, opacity: 0 }}
+											transition={{
+												x: { type: "spring", bounce: 0 },
+												opacity: { duration: 0.2 },
+											}}
+										>
+											{friend.playing ? (
+												<span>Playing on {friend.playing}</span>
+											) : (
+												<span>Last online 12 hours ago</span>
+											)}
+										</motion.p>
+									)}
+								</AnimatePresence>
+								<MotionCircle
+									className={cn(
+										"col-start-3 row-start-1",
+										friend.online
+											? "fill-green-500 text-green-500"
+											: "fill-red-500 text-red-500",
+									)}
+									{...(friend.playing
+										? {
+												animate: {
+													opacity: isHovering ? 0 : 1,
+												},
+											}
+										: {})}
+									size={6}
+								/>
+							</CommandItem>
+							// 	className={cn(
+							// 		"group/friend relative w-64 max-w-64 rounded-none p-0 aria-selected:bg-transparent",
+							// 	)}
+							// >
+							// 	<Button
+							// 		className={cn(
+							// 			"relative ml-9 flex h-7 w-full max-w-64 items-center justify-start gap-2 rounded-e-none p-1 pr-0 pb-0 transition-all group-hover/friend:ml-10 group-hover/friend:bg-accent",
+							// 			{
+							// 				"group-hover/friend:h-10": friend.playing,
+							// 			},
+							// 		)}
+							// 		variant={"ghost"}
+							// 		onClick={() => openMessageWindow(friend.username)}
+							// 	>
+							// 		{friend.favorite && (
+							// 			<Star
+							// 				className="-left-5 group-hover/friend:-left-6 absolute fill-yellow-500 stroke-yellow-500 transition-[left]"
+							// 				style={{
+							// 					top: 7,
+							// 				}}
+							// 				size={14}
+							// 			/>
+							// 		)}
+							// 		<img
+							// 			src={friend.skin}
+							// 			className="mb-auto rounded-sm"
+							// 			alt="Face"
+							// 			width={20}
+							// 			height={20}
+							// 		/>
+							// 		<div className="mt-0.5 mb-auto flex flex-col text-start">
+							// 			<h2 className="truncate font-minecraft text-base leading-4">
+							// 				{friend.username}
+							// 			</h2>
+							// 			{friend.playing && (
+							// 				<p className="truncate text-muted-foreground text-xs leading-4 opacity-0 transition-opacity duration-100 group-hover/friend:opacity-100">
+							// 					Playing on {friend.playing}
+							// 				</p>
+							// 			)}
+							// 		</div>
+							// 		<Circle
+							// 			className={cn(
+							// 				"mr-2 mb-auto ml-auto min-w-fit",
+							// 				friend.online
+							// 					? "fill-green-500 text-green-500"
+							// 					: "fill-red-500 text-red-500",
+							// 			)}
+							// 			style={{
+							// 				marginTop: 6,
+							// 			}}
+							// 			size={6}
+							// 		/>
+							// 	</Button>
+							// </CommandItem>
+						);
+					})}
+					<CommandEmpty className="mr-8">{"No friends found"}</CommandEmpty>
+				</CommandList>
+			</ScrollArea>
+		</Command>
+	);
 }

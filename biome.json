@@ -1,25 +1,25 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.1/schema.json",
-  "vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
-  "organizeImports": { "enabled": true },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "nursery": {
-        "useSortedClasses": {
-          "level": "warn",
-          "fix": "safe",
-          "options": {
-            "functions": ["cn", "clsx", "twMerge"]
-          }
-        }
-      }
-    }
-  },
-  "formatter": {
-    "enabled": true,
-    "formatWithErrors": false
-  },
-  "overrides": [{ "include": ["**/*.{js,jsx,ts,tsx}"] }]
+	"$schema": "https://biomejs.dev/schemas/1.9.1/schema.json",
+	"vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
+	"organizeImports": { "enabled": true },
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"nursery": {
+				"useSortedClasses": {
+					"level": "info",
+					"fix": "safe",
+					"options": {
+						"functions": ["cn", "clsx", "twMerge"]
+					}
+				}
+			}
+		}
+	},
+	"formatter": {
+		"enabled": true,
+		"formatWithErrors": false
+	},
+	"overrides": [{ "include": ["**/*.{js,jsx,ts,tsx}"] }]
 }

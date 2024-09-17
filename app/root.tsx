@@ -6,7 +6,7 @@ import {
 	Scripts,
 	ScrollRestoration,
 } from "@remix-run/react";
-import { WindowTitleBar } from "~/components/layout";
+import { WindowTitleBar } from "~/components/layout/title-bar";
 import { Providers } from "~/lib/providers";
 import { cn } from "~/lib/utils";
 
