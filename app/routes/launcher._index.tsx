@@ -4,10 +4,14 @@ import { AddFriendButton, FriendList } from "~/components/friends";
 import { LauncherCard } from "~/components/launcher-card";
 import { NewsFeed } from "~/components/news-feed";
 import { Button } from "~/components/ui/button";
+import type { Handle } from "~/lib/types/handle";
 
-export const handle = {
-	breadcrumb: () => ["Launcher"],
-	sidebar: Sidebar,
+export const handle: Handle = {
+	Sidebar,
+	titleBarOptions: {
+		breadcrumb: ["Launcher"],
+		hideBackButton: true,
+	},
 };
 
 export default function Launcher() {
@@ -29,7 +33,6 @@ function Sidebar() {
 				className="mt-auto ml-6 h-7 w-full justify-start gap-3 rounded-s-full rounded-e-none transition-[margin] hover:ml-7"
 				variant={"ghost"}
 				size={"sm"}
-				// onClick={openSettingsWindow}
 				asChild
 			>
 				<Link to="/launcher/settings">

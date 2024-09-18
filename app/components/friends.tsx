@@ -65,7 +65,7 @@ export function FriendList({ className }: { className?: string }) {
 	const openMessageWindow = useCallback(
 		async (user?: string) => {
 			if (cooldownRef.current) {
-				toast.error("Please wait a moment.");
+				toast.warning("Please wait a moment.");
 				return;
 			}
 
@@ -129,6 +129,9 @@ export function FriendList({ className }: { className?: string }) {
 								key={friend.username}
 								className={cn(
 									"grid h-7 max-w-56 cursor-pointer gap-x-2 overflow-hidden rounded-md rounded-e-none p-1 transition-all hover:ml-1 hover:h-11",
+									{
+										"rounded-es-lg": isHovering,
+									},
 								)}
 								style={{
 									gridTemplateColumns: "20px 1fr 12px",
@@ -154,7 +157,7 @@ export function FriendList({ className }: { className?: string }) {
 									width={20}
 									height={20}
 								/>
-								<h1 className="truncate font-minecraft text-base leading-4">
+								<h1 className="truncate font-minecraft text-base text-minecraft-foreground leading-4">
 									{friend.username}
 								</h1>
 								<AnimatePresence mode="wait">
@@ -204,73 +207,15 @@ export function FriendList({ className }: { className?: string }) {
 											? "fill-green-500 text-green-500"
 											: "fill-red-500 text-red-500",
 									)}
-									{...(friend.playing
-										? {
-												animate: {
-													opacity: isHovering ? 0 : 1,
-												},
-											}
-										: {})}
+									animate={{
+										opacity: isHovering ? 0 : 1,
+									}}
 									size={6}
 								/>
 							</CommandItem>
-							// 	className={cn(
-							// 		"group/friend relative w-64 max-w-64 rounded-none p-0 aria-selected:bg-transparent",
-							// 	)}
-							// >
-							// 	<Button
-							// 		className={cn(
-							// 			"relative ml-9 flex h-7 w-full max-w-64 items-center justify-start gap-2 rounded-e-none p-1 pr-0 pb-0 transition-all group-hover/friend:ml-10 group-hover/friend:bg-accent",
-							// 			{
-							// 				"group-hover/friend:h-10": friend.playing,
-							// 			},
-							// 		)}
-							// 		variant={"ghost"}
-							// 		onClick={() => openMessageWindow(friend.username)}
-							// 	>
-							// 		{friend.favorite && (
-							// 			<Star
-							// 				className="-left-5 group-hover/friend:-left-6 absolute fill-yellow-500 stroke-yellow-500 transition-[left]"
-							// 				style={{
-							// 					top: 7,
-							// 				}}
-							// 				size={14}
-							// 			/>
-							// 		)}
-							// 		<img
-							// 			src={friend.skin}
-							// 			className="mb-auto rounded-sm"
-							// 			alt="Face"
-							// 			width={20}
-							// 			height={20}
-							// 		/>
-							// 		<div className="mt-0.5 mb-auto flex flex-col text-start">
-							// 			<h2 className="truncate font-minecraft text-base leading-4">
-							// 				{friend.username}
-							// 			</h2>
-							// 			{friend.playing && (
-							// 				<p className="truncate text-muted-foreground text-xs leading-4 opacity-0 transition-opacity duration-100 group-hover/friend:opacity-100">
-							// 					Playing on {friend.playing}
-							// 				</p>
-							// 			)}
-							// 		</div>
-							// 		<Circle
-							// 			className={cn(
-							// 				"mr-2 mb-auto ml-auto min-w-fit",
-							// 				friend.online
-							// 					? "fill-green-500 text-green-500"
-							// 					: "fill-red-500 text-red-500",
-							// 			)}
-							// 			style={{
-							// 				marginTop: 6,
-							// 			}}
-							// 			size={6}
-							// 		/>
-							// 	</Button>
-							// </CommandItem>
 						);
 					})}
-					<CommandEmpty className="mr-8">{"No friends found"}</CommandEmpty>
+					<CommandEmpty className="mr-8">No friends found</CommandEmpty>
 				</CommandList>
 			</ScrollArea>
 		</Command>

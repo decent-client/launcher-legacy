@@ -1,19 +1,17 @@
 import { ChevronRightIcon } from "@radix-ui/react-icons";
-import {
-	type UIMatch,
-	useLocation,
-	useMatches,
-	useNavigate,
-} from "@remix-run/react";
+import { UIMatch, useLocation, useNavigate } from "@remix-run/react";
 import {
 	type Window as CurrentWindow,
 	getCurrentWindow,
 } from "@tauri-apps/api/window";
 import { useEffect, useRef, useState } from "react";
 import { Fragment } from "react/jsx-runtime";
+import { capitalize } from "string-ts";
 import tauriConfig from "~/../src-tauri/tauri.conf.json";
 import { MenuButtons } from "~/components/layout/menus";
+import { useHandle } from "~/hooks/handle";
 import { showSnapOverlay } from "~/lib/tauri";
+import type { Handle } from "~/lib/types/handle";
 import { cn } from "~/lib/utils";
 
 type ButtonType = "back" | "minimize" | "maximize" | "close";
@@ -23,11 +21,6 @@ type CaptionButton = {
 	props: React.ButtonHTMLAttributes<HTMLButtonElement>;
 };
 
-type BreadcrumbMatch = UIMatch<
-	Record<string, unknown>,
-	{ breadcrumb: (data?: unknown) => string[] }
->;
-
 export function WindowTitleBar({
 	className,
 	homeLocation = "/launcher",
@@ -35,17 +28,14 @@ export function WindowTitleBar({
 	className?: string;
 	homeLocation?: string;
 }) {
-	const timerRef = useRef<NodeJS.Timeout | null>(null);
+	const { titleBarOptions } = useHandle<Handle>();
 	const [isMaximized, setIsMaximized] = useState(false);
+	const timerRef = useRef<NodeJS.Timeout | null>(null);
 	const navigate = useNavigate();
-	const location = useLocation();
-	const matches = (useMatches() as unknown as BreadcrumbMatch[]).filter(
-		({ handle }) => handle?.breadcrumb,
-	);
 
 	const window = getCurrentWindow();
 
-	if (location.pathname === "/") {
+	if (titleBarOptions?.hideTitleBar) {
 		return null;
 	}
 
@@ -117,17 +107,13 @@ export function WindowTitleBar({
 			)}
 			data-tauri-drag-region
 		>
-			{" "}
-			{!location.pathname.startsWith("/messages") && (
+			{!titleBarOptions?.hideBackButton && (
+				<CaptionButton buttonType="back" onClick={() => navigate(homeLocation)}>
+					&#xE72B;
+				</CaptionButton>
+			)}
+			{!titleBarOptions?.hideTitle && (
 				<Fragment>
-					{location.pathname !== homeLocation && (
-						<CaptionButton
-							buttonType="back"
-							onClick={() => navigate(homeLocation)}
-						>
-							&#xE72B;
-						</CaptionButton>
-					)}
 					<img
 						className="pointer-events-none my-[8px] ml-[16px] size-4"
 						src="/favicon.ico"
@@ -135,35 +121,46 @@ export function WindowTitleBar({
 					/>
 					<ol className="pointer-events-none ml-[16px] flex h-[32px] items-center gap-x-2 whitespace-nowrap font-segoe-ui text-base">
 						<li>Decent Client</li>
-						{matches
-							.filter((match) => match.handle?.breadcrumb)
-							.flatMap((match) =>
-								match.handle.breadcrumb(match).map((crumb, index) => (
-									<Fragment key={crumb}>
-										{index > 0 && (
-											<li className="[&>svg]:size-3.5">
-												<ChevronRightIcon className="stroke-muted-foreground" />
-											</li>
-										)}
-										<li className="text-muted-foreground">{crumb}</li>
-									</Fragment>
-								)),
-							)}
+						{titleBarOptions?.breadcrumb?.map((crumb, index) => (
+							<Fragment key={crumb}>
+								{index > 0 && (
+									<li className="[&>svg]:size-3.5">
+										<ChevronRightIcon className="stroke-muted-foreground" />
+									</li>
+								)}
+								<li className="text-muted-foreground">{crumb}</li>
+							</Fragment>
+						))}
 					</ol>
 				</Fragment>
 			)}
-			<MenuButtons className="ml-auto" />
-			<CaptionControlGroup>
-				{captionButtons.map((button) => (
-					<CaptionButton
-						key={button.type}
-						buttonType={button.type}
-						{...button.props}
-					>
-						{button.getIcon(isMaximized)}
-					</CaptionButton>
-				))}
-			</CaptionControlGroup>
+			{!titleBarOptions?.hideMenuButtons && <MenuButtons className="ml-auto" />}
+			{titleBarOptions?.captionButtons !== false && (
+				<CaptionControlGroup
+					className={cn({ "ml-auto": titleBarOptions?.hideMenuButtons })}
+				>
+					{captionButtons.map((button) => {
+						if (
+							typeof titleBarOptions?.captionButtons === "object" &&
+							titleBarOptions?.captionButtons[
+								`hide${capitalize(button.type)}Button` as keyof typeof titleBarOptions.captionButtons
+							]
+						) {
+							return null;
+						}
+
+						return (
+							<CaptionButton
+								key={button.type}
+								buttonType={button.type}
+								{...button.props}
+							>
+								{button.getIcon(isMaximized)}
+							</CaptionButton>
+						);
+					})}
+				</CaptionControlGroup>
+			)}
 		</header>
 	);
 }

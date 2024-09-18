@@ -16,11 +16,14 @@ import { useDebouncedCallback } from "~/hooks/debounce";
 import type { Settings as SettingsType } from "~/lib/constants/settings";
 import { settingsSchema, settingsTabs } from "~/lib/constants/settings";
 import { useSettings } from "~/lib/providers/settings-provider";
+import type { Handle } from "~/lib/types/handle";
 import { cn } from "~/lib/utils";
 
-export const handle = {
-	breadcrumb: () => ["Settings"],
-	sidebar: Sidebar,
+export const handle: Handle = {
+	Sidebar,
+	titleBarOptions: {
+		breadcrumb: ["Settings"],
+	},
 };
 
 export default function Settings() {
