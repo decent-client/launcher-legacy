@@ -10,6 +10,7 @@ import { capitalize } from "string-ts";
 import tauriConfig from "~/../src-tauri/tauri.conf.json";
 import { MenuButtons } from "~/components/layout/menus";
 import { useHandle } from "~/hooks/handle";
+import { useOsType } from "~/hooks/os-type";
 import { showSnapOverlay } from "~/lib/tauri";
 import type { Handle } from "~/lib/types/handle";
 import { cn } from "~/lib/utils";
@@ -32,6 +33,7 @@ export function WindowTitleBar({
 	const [isMaximized, setIsMaximized] = useState(false);
 	const timerRef = useRef<NodeJS.Timeout | null>(null);
 	const navigate = useNavigate();
+	const osType = useOsType();
 
 	const window = getCurrentWindow();
 
@@ -114,28 +116,37 @@ export function WindowTitleBar({
 			)}
 			{!titleBarOptions?.hideTitle && (
 				<Fragment>
-					<img
-						className="pointer-events-none my-[8px] ml-[16px] size-4"
-						src="/favicon.ico"
-						alt="Icon"
-					/>
-					<ol className="pointer-events-none ml-[16px] flex h-[32px] items-center gap-x-2 whitespace-nowrap font-segoe-ui text-base">
+					<ol
+						className={cn(
+							"pointer-events-none ml-[16px] flex h-[32px] items-center whitespace-nowrap font-segoe-ui text-base",
+							{
+								"-translate-x-1/2 absolute left-1/2": osType === "macos",
+							},
+						)}
+					>
+						<li className="mr-[16px]">
+							<img
+								className="pointer-events-none my-[8px] size-4"
+								src="/favicon.ico"
+								alt="Icon"
+							/>
+						</li>
 						<li>Decent Client</li>
 						{titleBarOptions?.breadcrumb?.map((crumb, index) => (
 							<Fragment key={crumb}>
 								{index > 0 && (
-									<li className="[&>svg]:size-3.5">
+									<li className="ml-2 [&>svg]:size-3.5">
 										<ChevronRightIcon className="stroke-muted-foreground" />
 									</li>
 								)}
-								<li className="text-muted-foreground">{crumb}</li>
+								<li className="ml-2 text-muted-foreground">{crumb}</li>
 							</Fragment>
 						))}
 					</ol>
 				</Fragment>
 			)}
 			{!titleBarOptions?.hideMenuButtons && <MenuButtons className="ml-auto" />}
-			{titleBarOptions?.captionButtons !== false && (
+			{titleBarOptions?.captionButtons !== false && osType !== "macos" && (
 				<CaptionControlGroup
 					className={cn({ "ml-auto": titleBarOptions?.hideMenuButtons })}
 				>
