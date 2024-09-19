@@ -80,7 +80,10 @@ export function NewsFeed({ className }: Readonly<{ className?: string }>) {
 				<div className="grid grid-cols-3 gap-2 rounded-[inherit]">
 					{Array.from({ length: 100 }).map((_, i) => (
 						<Card
-							key={`card${i}`}
+							key={`card${
+								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+								i
+							}`}
 							className="grid border-b border-none bg-card/50"
 						>
 							<Card className="aspect-[24/10]" />

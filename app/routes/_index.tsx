@@ -1,7 +1,14 @@
 import { invoke } from "@tauri-apps/api/core";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import type { Handle } from "~/lib/types/handle";
 import { sleep } from "~/lib/utils";
+
+export const handle: Handle = {
+	titleBarOptions: {
+		hideTitleBar: true,
+	},
+};
 
 const loadingSubtitles = [
 	"Tailoring your experience",
@@ -56,7 +63,7 @@ export default function SplashScreen() {
 
 	return (
 		<div
-			className="pointer-events-none relative grid place-items-center text-center font-sans"
+			className="pointer-events-none relative grid h-screen place-items-center text-center font-sans"
 			data-tauri-drag-region
 		>
 			<span className="flex flex-col items-center justify-center">

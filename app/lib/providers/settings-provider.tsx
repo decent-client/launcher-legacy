@@ -48,11 +48,11 @@ export function SettingsProvider({
 	initialSettings?: Settings;
 	settingsFile?: FileNameJSON;
 }) {
+	const [settings, setSettingsState] = useState<Settings>(initialSettings);
 	const [settingsTab, setSettingsTab] = useSessionStorage<SettingsTab>(
 		tabStorageKey,
 		"preferences",
 	);
-	const [settings, setSettingsState] = useState<Settings>(initialSettings);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {

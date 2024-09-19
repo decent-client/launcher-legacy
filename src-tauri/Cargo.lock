@@ -69,19 +69,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "10f00e1f6e58a40e807377c75c6a7f97bf9044fab57816f2414e6f5f4499d7b8"
 
 [[package]]
-name = "app"
-version = "0.1.0"
-dependencies = [
- "enigo",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-fs",
- "tauri-plugin-system-info",
-]
-
-[[package]]
 name = "atk"
 version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -610,6 +597,19 @@ dependencies = [
  "darling_core",
  "quote",
  "syn 2.0.77",
+]
+
+[[package]]
+name = "decent_client"
+version = "0.1.0"
+dependencies = [
+ "enigo",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-fs",
+ "tauri-plugin-system-info",
 ]
 
 [[package]]
