@@ -611,6 +611,7 @@ dependencies = [
  "tauri-plugin-fs",
  "tauri-plugin-os",
  "tauri-plugin-system-info",
+ "windows-version",
 ]
 
 [[package]]

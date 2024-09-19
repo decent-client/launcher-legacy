@@ -11,18 +11,9 @@
 	"app": {
 		"windows": [
 			{
-				"title": "Decent Client",
-				"width": 400,
-				"height": 200,
-				"center": true,
-				"resizable": false,
-				"transparent": true,
-				"decorations": false,
-				"visible": true,
-				"label": "splash-screen"
-			},
-			{
-				"title": "Decent Client | Launcher",
+				"title": "Decent Client - Launcher",
+				"label": "main-launcher",
+				"url": "launcher",
 				"width": 1086,
 				"height": 548,
 				"minWidth": 792,
@@ -32,8 +23,22 @@
 				"transparent": true,
 				"decorations": false,
 				"visible": false,
-				"label": "main-launcher",
-				"url": "launcher"
+				"hiddenTitle": true,
+				"titleBarStyle": "Overlay"
+			},
+			{
+				"title": "Decent Client",
+				"label": "splash-screen",
+				"url": "splash-screen",
+				"width": 400,
+				"height": 200,
+				"center": true,
+				"resizable": false,
+				"transparent": true,
+				"decorations": false,
+				"visible": true,
+				"hiddenTitle": true,
+				"titleBarStyle": "Overlay"
 			}
 		],
 		"security": {

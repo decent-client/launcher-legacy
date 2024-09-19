@@ -1,4 +1,4 @@
-use tauri;
+use tauri::Manager;
 
 #[tauri::command]
 pub fn setup_windows(app_handle: tauri::AppHandle) {
@@ -25,5 +25,3 @@ pub async fn show_snap_overlay() {
         enigo.key_click(Key::Alt);
     }
 }
-
-use tauri::Manager;
