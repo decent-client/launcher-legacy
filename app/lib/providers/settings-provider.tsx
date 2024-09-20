@@ -1,4 +1,4 @@
-import { appDataDir } from "@tauri-apps/api/path";
+import { appDataDir, configDir, join } from "@tauri-apps/api/path";
 import {
 	BaseDirectory,
 	exists,
@@ -56,7 +56,18 @@ export function SettingsProvider({
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		initialize(initialSettings);
+		async function initSettings() {
+			initialize(
+				deepMerge(initialSettings, {
+					advanced: {
+						gameDirectory: await join(await configDir(), ".minecraft"),
+						javaPath: await join(await appDataDir(), "java"),
+					},
+				}),
+			);
+		}
+
+		initSettings();
 	}, []);
 
 	async function initialize(values: Settings) {

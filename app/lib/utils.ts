@@ -9,24 +9,29 @@ export function sleep(ms: number) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function deepMerge<T>(...objects: T[]): T {
-	const isObject = (obj: unknown) => obj && typeof obj === "object";
+export function deepMerge<T>(...objects: Partial<T>[]) {
+	const isObject = (obj: unknown): obj is Record<string, unknown> =>
+		obj !== null && typeof obj === "object";
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	return objects.reduce((prev: any, obj: any) => {
-		Object.keys(obj as object).forEach((key) => {
-			const pVal = prev[key];
-			const oVal = obj[key];
+	return objects.reduce((prev: Partial<T>, obj: Partial<T>) => {
+		for (const key in obj) {
+			if (Object.prototype.hasOwnProperty.call(obj, key)) {
+				const pVal = prev[key];
+				const oVal = obj[key];
 
-			if (Array.isArray(pVal) && Array.isArray(oVal)) {
-				prev[key] = pVal.concat(...oVal);
-			} else if (isObject(pVal) && isObject(oVal)) {
-				prev[key] = deepMerge(pVal, oVal);
-			} else {
-				prev[key] = oVal;
+				if (Array.isArray(pVal) && Array.isArray(oVal)) {
+					prev[key] = [...pVal, ...oVal] as T[keyof T];
+				} else if (isObject(pVal) && isObject(oVal)) {
+					prev[key] = deepMerge(
+						pVal as Partial<T>,
+						oVal as Partial<T>,
+					) as T[keyof T];
+				} else {
+					prev[key] = oVal as T[keyof T];
+				}
 			}
-		});
+		}
 
 		return prev;
-	}, {} as T);
+	}, {});
 }

@@ -9,7 +9,7 @@ export function Resources({
 	return (
 		<form
 			className={cn(
-				"mt-4 ml-4 flex flex-col space-y-8 overflow-hidden pr-4",
+				"mt-4 mb-12 ml-4 flex flex-col space-y-8 overflow-hidden pr-4",
 				className,
 			)}
 		></form>
