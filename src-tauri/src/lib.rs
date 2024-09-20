@@ -8,7 +8,6 @@ mod window_ext;
 
 pub fn run() {
     tauri::Builder::default()
-        .plugin(tauri_plugin_decorum::init())
         .setup(|app| {
             for window_name in ["splash-screen", "main-launcher"] {
                 if let Some(window) = app.get_webview_window(window_name) {
@@ -24,9 +23,23 @@ pub fn run() {
 
             Ok(())
         })
+        .on_window_event(|window, event| match event {
+            tauri::WindowEvent::CloseRequested { api, .. } => {
+                window.hide().unwrap();
+                api.prevent_close();
+            }
+            _ => {}
+        })
+        .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
+            let window = app.get_webview_window("main-launcher").unwrap();
+
+            window.show().unwrap();
+            window.set_focus().unwrap();
+        }))
+        .plugin(tauri_plugin_system_info::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_os::init())
-        .plugin(tauri_plugin_system_info::init())
+        .plugin(tauri_plugin_decorum::init())
         .invoke_handler(tauri::generate_handler![
             commands::setup_windows,
             commands::show_snap_overlay,

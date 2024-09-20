@@ -96,6 +96,7 @@ export function FriendList({ className }: { className?: string }) {
 				center: true,
 				decorations: false,
 				transparent: true,
+				maximizable: false,
 			});
 		},
 		[openWindowUser],
