@@ -1,7 +1,7 @@
 use tauri::Manager;
 
-#[allow(unused_imports)]
-use tauri_plugin_decorum::WebviewWindowExt;
+// #[allow(unused_imports)]
+// use tauri_plugin_decorum::WebviewWindowExt;
 
 mod commands;
 mod window_ext;
@@ -14,11 +14,11 @@ pub fn run() {
                 if let Some(window) = app.get_webview_window(window_name) {
                     window_ext::apply_window_effects(&window);
 
-                    #[cfg(target_os = "macos")]
-                    {
-                        window.set_traffic_lights_inset(12.0, 16.0).unwrap();
-                        window.make_transparent().unwrap()
-                    }
+                    // #[cfg(target_os = "macos")]
+                    // {
+                    // window.set_traffic_lights_inset(12.0, 16.0).unwrap();
+                    // window.make_transparent().unwrap()
+                    // }
                 }
             }
 
