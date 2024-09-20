@@ -1,6 +1,6 @@
 use tauri::Manager;
 
-#[allow(unused_imports)]
+#[cfg(target_os = "macos")]
 use tauri_plugin_decorum::WebviewWindowExt;
 
 mod commands;
