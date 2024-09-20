@@ -7,6 +7,7 @@ pub fn setup_windows(app_handle: tauri::AppHandle) {
 
     splash_window.close().unwrap();
     main_window.show().unwrap();
+    main_window.set_focus().unwrap();
 }
 
 #[tauri::command]

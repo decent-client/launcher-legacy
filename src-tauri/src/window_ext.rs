@@ -1,10 +1,16 @@
 use tauri::WebviewWindow;
 
+#[cfg(target_os = "macos")]
+use tauri::window::{Effect, EffectState, EffectsBuilder};
+
+#[cfg(target_os = "windows")]
+use tauri::window::{Effect, EffectsBuilder};
+#[cfg(target_os = "windows")]
+use windows_version::OsVersion;
+
 pub fn apply_window_effects(window: &WebviewWindow) {
     #[cfg(target_os = "macos")]
     {
-        use tauri::window::{Effect, EffectState, EffectsBuilder};
-
         window.set_effects(
             EffectsBuilder::new()
                 .effect(Effect::Popover)
@@ -15,9 +21,6 @@ pub fn apply_window_effects(window: &WebviewWindow) {
 
     #[cfg(target_os = "windows")]
     {
-        use tauri::window::{Effect, EffectsBuilder};
-        use windows_version::OsVersion;
-
         let version = OsVersion::current();
         let effects;
 

@@ -1,6 +1,6 @@
 {
 	"productName": "decent-client",
-	"version": "0.1.0",
+	"version": "0.0.1",
 	"identifier": "gg.decent-client.app",
 	"build": {
 		"frontendDist": "../build/client",

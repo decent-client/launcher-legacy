@@ -9,6 +9,10 @@ mod window_ext;
 pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
+            let splash_window = app.get_webview_window("splash-screen").unwrap();
+
+            splash_window.set_focus().unwrap();
+
             for window_name in ["splash-screen", "main-launcher"] {
                 if let Some(window) = app.get_webview_window(window_name) {
                     window_ext::apply_window_effects(&window);
