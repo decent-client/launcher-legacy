@@ -46,7 +46,7 @@ const friends = [
 	},
 ];
 
-const MotionCircle = motion(Circle, { forwardMotionProps: true });
+const MotionCircle = motion.create(Circle, { forwardMotionProps: true });
 
 export function AddFriendButton({ className }: { className?: string }) {
 	return (

@@ -19,7 +19,7 @@ export function MenuButtons({ className }: { className?: string }) {
 			)}
 		>
 			<ThemeToggle />
-			{!location.pathname.startsWith("/messages") && <Notifications />}
+			<Notifications />
 		</nav>
 	);
 }

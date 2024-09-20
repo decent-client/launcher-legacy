@@ -4,11 +4,13 @@ import {
 	type Window as CurrentWindow,
 	getCurrentWindow,
 } from "@tauri-apps/api/window";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Fragment } from "react/jsx-runtime";
 import { capitalize } from "string-ts";
 import tauriConfig from "~/../src-tauri/tauri.conf.json";
 import { MenuButtons } from "~/components/layout/menus";
+import { Button } from "~/components/ui/button";
 import { useHandle } from "~/hooks/handle";
 import { useOsType } from "~/hooks/os-type";
 import { showSnapOverlay } from "~/lib/tauri";
@@ -109,11 +111,34 @@ export function WindowTitleBar({
 			)}
 			data-tauri-drag-region
 		>
-			{!titleBarOptions?.hideBackButton && (
-				<CaptionButton buttonType="back" onClick={() => navigate(homeLocation)}>
-					&#xE72B;
-				</CaptionButton>
-			)}
+			{!titleBarOptions?.hideBackButton &&
+				(osType !== "windows" ? (
+					<nav className="absolute left-[calc(16rem-26px*2)] p-px">
+						<Button
+							className="m-0.5 size-[1.625rem]"
+							variant={"ghost"}
+							size={"icon"}
+							onClick={() => navigate(homeLocation)}
+						>
+							<ChevronLeft size={16} />
+						</Button>
+						<Button
+							className="m-0.5 size-[1.625rem]"
+							variant={"ghost"}
+							size={"icon"}
+							disabled
+						>
+							<ChevronRight size={16} />
+						</Button>
+					</nav>
+				) : (
+					<CaptionButton
+						buttonType="back"
+						onClick={() => navigate(homeLocation)}
+					>
+						&#xE72B;
+					</CaptionButton>
+				))}
 			{!titleBarOptions?.hideTitle && (
 				<Fragment>
 					<ol

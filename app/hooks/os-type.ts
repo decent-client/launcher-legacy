@@ -1,10 +1,8 @@
 import { type OsType, type } from "@tauri-apps/plugin-os";
 
-type OsReturnType = Exclude<OsType, "ios" | "android"> | "unknown";
-
-export function useOsType(): OsReturnType {
+export function useOsType() {
 	try {
-		return type() as Exclude<OsReturnType, "unknown">;
+		return type() as Exclude<OsType, "ios" | "android">;
 	} catch (error) {
 		return "unknown";
 	}

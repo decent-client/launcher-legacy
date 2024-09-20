@@ -1,53 +1,34 @@
+#[cfg(target_os = "macos")]
+use tauri::{window::EffectState, Runtime};
 use tauri::{
-    window::{Effect, EffectState, EffectsBuilder},
+    window::{Effect, EffectsBuilder},
     WebviewWindow,
 };
 use windows_version::OsVersion;
 
 pub fn apply_window_effects(window: &WebviewWindow) {
-    #[cfg(target_os = "macos")]
+    let version = OsVersion::current();
+
+    #[cfg(any(target_os = "macos", target_os = "windows"))]
     window
         .set_effects(
+            #[cfg(target_os = "macos")]
             EffectsBuilder::new()
                 .effect(Effect::Popover)
                 .state(EffectState::Active)
                 .build(),
+            #[cfg(target_os = "windows")]
+            {
+                if version.major > 10 || (version.major == 10 && version.minor >= 22000) {
+                    EffectsBuilder::new().effect(Effect::Mica).build()
+                } else if version.major == 10 {
+                    EffectsBuilder::new().effect(Effect::Acrylic).build()
+                } else {
+                    EffectsBuilder::new().effect(Effect::Blur).build()
+                }
+            },
         )
         .unwrap();
-
-    #[cfg(target_os = "windows")]
-    {
-        let version = OsVersion::current();
-
-        if version.major > 10 {
-            window
-                .set_effects(
-                    EffectsBuilder::new()
-                        .effect(Effect::Mica)
-                        .state(EffectState::Active)
-                        .build(),
-                )
-                .unwrap();
-        } else if version.major == 10 {
-            window
-                .set_effects(
-                    EffectsBuilder::new()
-                        .effect(Effect::Acrylic)
-                        .state(EffectState::Active)
-                        .build(),
-                )
-                .unwrap();
-        } else {
-            window
-                .set_effects(
-                    EffectsBuilder::new()
-                        .effect(Effect::Blur)
-                        .state(EffectState::Active)
-                        .build(),
-                )
-                .unwrap();
-        }
-    }
 
     #[cfg(target_os = "linux")]
     window
