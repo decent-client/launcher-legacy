@@ -7,7 +7,7 @@ import {
 	writeTextFile,
 } from "@tauri-apps/plugin-fs";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useSessionStorage } from "~/hooks/session-storage";
+import { useSessionStorage } from "~/hooks/storage";
 import {
 	type Settings,
 	initialSettings as defaultSettings,

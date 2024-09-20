@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect } from "react";
-import { useLocalStorage } from "~/hooks/local-storage";
+import { useLocalStorage } from "~/hooks/storage";
 
 export type Theme = "dark" | "light" | "system" | "oled";
 

@@ -11,7 +11,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
-import { useLocalStorage } from "~/hooks/local-storage";
+import { useLocalStorage } from "~/hooks/storage";
 import { useLauncherLayout } from "~/lib/providers/launcher-layout";
 import { cn } from "~/lib/utils";
 
