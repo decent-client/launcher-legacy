@@ -25,16 +25,18 @@ pub fn run() {
         })
         .on_window_event(|window, event| match event {
             tauri::WindowEvent::CloseRequested { api, .. } => {
-                window.hide().unwrap();
-                api.prevent_close();
+                if window.label() == "main-launcher" {
+                    window.hide().unwrap();
+                    api.prevent_close();
+                }
             }
             _ => {}
         })
         .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
-            let window = app.get_webview_window("main-launcher").unwrap();
-
-            window.show().unwrap();
-            window.set_focus().unwrap();
+            if let Some(window) = app.get_webview_window("main-launcher") {
+                window.show().unwrap();
+                window.set_focus().unwrap();
+            }
         }))
         .plugin(tauri_plugin_system_info::init())
         .plugin(tauri_plugin_fs::init())
