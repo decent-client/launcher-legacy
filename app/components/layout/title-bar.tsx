@@ -140,35 +140,33 @@ export function WindowTitleBar({
 					</CaptionButton>
 				))}
 			{!titleBarOptions?.hideTitle && (
-				<Fragment>
-					<ol
-						className={cn(
-							"pointer-events-none ml-[16px] flex h-[32px] items-center whitespace-nowrap font-segoe-ui text-base",
-							{
-								"-translate-x-1/2 absolute left-1/2": osType === "macos",
-							},
-						)}
-					>
-						<li className="mr-[16px]">
-							<img
-								className="pointer-events-none my-[8px] size-4"
-								src="/favicon.ico"
-								alt="Icon"
-							/>
-						</li>
-						<li>Decent Client</li>
-						{titleBarOptions?.breadcrumb?.map((crumb, index) => (
-							<Fragment key={crumb}>
-								{index > 0 && (
-									<li className="ml-2 [&>svg]:size-3.5">
-										<ChevronRightIcon className="stroke-muted-foreground" />
-									</li>
-								)}
-								<li className="ml-2 text-muted-foreground">{crumb}</li>
-							</Fragment>
-						))}
-					</ol>
-				</Fragment>
+				<ol
+					className={cn(
+						"pointer-events-none ml-[16px] flex h-[32px] items-center whitespace-nowrap font-segoe-ui text-base",
+						{
+							"-translate-x-1/2 absolute left-1/2 ml-0": osType === "macos",
+						},
+					)}
+				>
+					<li className="mr-[16px]">
+						<img
+							className="pointer-events-none my-[8px] size-4"
+							src="/app-icon.png"
+							alt="Icon"
+						/>
+					</li>
+					<li>Decent Client</li>
+					{titleBarOptions?.breadcrumb?.map((crumb, index) => (
+						<Fragment key={crumb}>
+							{index > 0 && (
+								<li className="ml-2 [&>svg]:size-3.5">
+									<ChevronRightIcon className="stroke-muted-foreground" />
+								</li>
+							)}
+							<li className="ml-2 text-muted-foreground">{crumb}</li>
+						</Fragment>
+					))}
+				</ol>
 			)}
 			{!titleBarOptions?.hideMenuButtons && <MenuButtons className="ml-auto" />}
 			{titleBarOptions?.captionButtons !== false && osType !== "macos" && (
