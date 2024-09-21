@@ -161,7 +161,7 @@ export function FriendList({ className }: { className?: string }) {
 								<h1 className="truncate font-minecraft text-base text-minecraft-foreground leading-4">
 									{friend.username}
 								</h1>
-								<AnimatePresence mode="wait">
+								<AnimatePresence mode="popLayout">
 									{isHovering && (
 										<MotionCircle
 											key={`${friend.username}-online`}

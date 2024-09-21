@@ -77,7 +77,7 @@ export function NewsFeed({ className }: Readonly<{ className?: string }>) {
 				className="mt-1.5 h-12 flex-grow rounded-lg"
 				hideScrollBar
 			>
-				<div className="grid grid-cols-3 gap-2 rounded-[inherit]">
+				<div className="grid grid-cols-2 gap-2 rounded-[inherit] lg:grid-cols-3 xl:grid-cols-4">
 					{Array.from({ length: 100 }).map((_, i) => (
 						<Card
 							key={`card${

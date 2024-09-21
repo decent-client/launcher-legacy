@@ -10,6 +10,7 @@ import { cn } from "~/lib/utils";
 
 import SkinView3D from "~/components/skin-viewer";
 import { useLauncherLayout } from "~/lib/providers/launcher-layout";
+import { AccountSelect } from "./account-select";
 
 const MotionCard = motion.create(Card);
 const MotionButton = motion.create(Button);
@@ -41,6 +42,7 @@ export function LauncherCard({ className }: Readonly<{ className?: string }>) {
 		>
 			<Backdrop />
 			<article className="relative z-10 grid place-items-center overflow-hidden">
+				<AccountSelect className="absolute top-1 left-1 w-auto min-w-32" />
 				<motion.div
 					className="absolute bg-transparent"
 					animate={{

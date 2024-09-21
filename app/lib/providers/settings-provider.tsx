@@ -6,14 +6,13 @@ import {
 	readTextFile,
 	writeTextFile,
 } from "@tauri-apps/plugin-fs";
+import { deepmerge } from "deepmerge-ts";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useSessionStorage } from "~/hooks/storage";
 import {
 	type Settings,
 	initialSettings as defaultSettings,
 } from "~/lib/constants/settings";
-import { deepMerge } from "~/lib/utils";
-
 export type SettingsTab =
 	| "preferences"
 	| "launcher"
@@ -58,7 +57,7 @@ export function SettingsProvider({
 	useEffect(() => {
 		async function initSettings() {
 			initialize(
-				deepMerge(initialSettings, {
+				deepmerge(initialSettings, {
 					advanced: {
 						gameDirectory: await join(await configDir(), ".minecraft"),
 						javaPath: await join(await appDataDir(), "java"),
@@ -82,8 +81,8 @@ export function SettingsProvider({
 
 	async function setSettings(values: Settings) {
 		try {
-			setSettingsState((prev) => deepMerge(prev, values));
-			createSettingsFile(settingsFile, deepMerge(settings, values));
+			setSettingsState((prev) => deepmerge(prev, values));
+			createSettingsFile(settingsFile, deepmerge(settings, values));
 			console.log("Settings file written successfully");
 		} catch (error) {
 			console.error("Error writing settings file: ", error);
