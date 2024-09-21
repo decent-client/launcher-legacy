@@ -1,6 +1,6 @@
 {
   "name": "decent-client",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -9,7 +9,10 @@
     "dev": "remix vite:dev",
     "tauri:dev": "tauri dev",
     "check": "biome check --write ./app",
-    "prepare": "husky"
+    "prepare": "husky",
+    "version-patch": "tauri-version patch --no-git",
+    "version-minor": "tauri-version minor --no-git",
+    "version-major": "tauri-version major --no-git"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
