@@ -49,6 +49,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::setup_windows,
             commands::show_snap_overlay,
+            commands::get_player_face,
+            commands::get_player_texture,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

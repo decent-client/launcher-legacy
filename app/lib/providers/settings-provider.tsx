@@ -13,6 +13,7 @@ import {
 	type Settings,
 	initialSettings as defaultSettings,
 } from "~/lib/constants/settings";
+
 export type SettingsTab =
 	| "preferences"
 	| "launcher"

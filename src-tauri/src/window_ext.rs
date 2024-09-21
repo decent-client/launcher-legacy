@@ -11,7 +11,7 @@ use windows_version::OsVersion;
 pub fn apply_window_effects(window: &WebviewWindow) {
     #[cfg(target_os = "macos")]
     {
-        window.set_effects(
+        let _ = window.set_effects(
             EffectsBuilder::new()
                 .effect(Effect::Popover)
                 .state(EffectState::Active)

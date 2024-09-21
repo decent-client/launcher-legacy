@@ -12,7 +12,7 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 import { useLocalStorage } from "~/hooks/storage";
-import { useLauncherLayout } from "~/lib/providers/launcher-layout";
+import { useLauncherLayout } from "~/lib/providers/launcher-layout-provider";
 import { cn } from "~/lib/utils";
 
 export function NewsFeed({ className }: Readonly<{ className?: string }>) {

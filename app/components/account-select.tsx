@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, ExternalLink, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 import { MicrosoftIcon } from "~/components/icons/microsoft";
 import { Button } from "~/components/ui/button";
 import {
@@ -16,11 +17,15 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { usePlayerTexture } from "~/hooks/player-texture";
+import { getPlayerFaceTexture } from "~/lib/tauri";
 import { cn } from "~/lib/utils";
 
 const MotionButton = motion.create(Button);
 
 export function AccountSelect({ className }: { className?: string }) {
+	const { headTexture } = usePlayerTexture("liqw");
+
 	return (
 		<AnimatePresence>
 			<Dialog>
@@ -47,13 +52,13 @@ export function AccountSelect({ className }: { className?: string }) {
 								<div className="inline-flex items-center gap-2">
 									<img
 										className="rounded-sm"
-										src={"images/fallback/steve-head.png"}
+										src={headTexture}
 										alt="Skin Head"
 										width={20}
 										height={20}
 									/>
 									<span className="mt-0.5 font-minecraft text-minecraft-foreground">
-										USERNAME
+										{"{USERNAME}"}
 									</span>
 								</div>
 								<ArrowRight

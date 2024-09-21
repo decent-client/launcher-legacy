@@ -10,3 +10,19 @@ export async function showSnapOverlay(window: CurrentWindow) {
 		invoke("show_snap_overlay");
 	});
 }
+
+export async function getPlayerFaceTexture(playerName: string) {
+	try {
+		return (await invoke("get_player_face", { playerName })) as string;
+	} catch (error) {
+		throw new Error("Failed to get player face");
+	}
+}
+
+export async function getPlayerTexture(playerName: string) {
+	try {
+		return (await invoke("get_player_texture", { playerName })) as string;
+	} catch (error) {
+		throw new Error("Failed to get player texture");
+	}
+}

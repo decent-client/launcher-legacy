@@ -2,15 +2,14 @@
 
 import { motion } from "framer-motion";
 import { Rocket } from "lucide-react";
+import { AccountSelect } from "~/components/account-select";
+import SkinView3D from "~/components/skin-viewer";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
-// import { SparklesCore } from "@/components/ui/motion/sparkles";
-// import { useLauncherLayout } from "@/lib/providers/launcher-layout";
+import { Skeleton } from "~/components/ui/skeleton";
+import { usePlayerTexture } from "~/hooks/player-texture";
+import { useLauncherLayout } from "~/lib/providers/launcher-layout-provider";
 import { cn } from "~/lib/utils";
-
-import SkinView3D from "~/components/skin-viewer";
-import { useLauncherLayout } from "~/lib/providers/launcher-layout";
-import { AccountSelect } from "./account-select";
 
 const MotionCard = motion.create(Card);
 const MotionButton = motion.create(Button);
@@ -19,6 +18,7 @@ export function LauncherCard({ className }: Readonly<{ className?: string }>) {
 	const {
 		newsFeedSection: { scrollY },
 	} = useLauncherLayout();
+	const { fullTexture, loading } = usePlayerTexture("liqw");
 
 	return (
 		<MotionCard
@@ -42,6 +42,7 @@ export function LauncherCard({ className }: Readonly<{ className?: string }>) {
 		>
 			<Backdrop />
 			<article className="relative z-10 grid place-items-center overflow-hidden">
+				{loading && <Skeleton className="absolute inset-0" />}
 				<AccountSelect className="absolute top-1 left-1 w-auto min-w-32" />
 				<motion.div
 					className="absolute bg-transparent"
@@ -54,19 +55,22 @@ export function LauncherCard({ className }: Readonly<{ className?: string }>) {
 						bounce: 0,
 					}}
 				>
-					<SkinView3D
-						skinUrl="https://textures.minecraft.net/texture/62ef03bef2855ec18c29e8d555df0f9a7718fb4fd609de3b9ff64b4d6ea87fbe"
-						height={256 * 1.25}
-						width={256}
-						onReady={({ viewer }) => {
-							viewer.fov = 35;
-							viewer.camera.position.x = 22 * Math.sin(0.01) - 20;
-							viewer.camera.position.y = 22 * Math.sin(0.01) + 15;
-							viewer.controls.enableZoom = false;
-							viewer.controls.enablePan = false;
-						}}
-					/>
+					{!loading && (
+						<SkinView3D
+							skinUrl={fullTexture}
+							height={256 * 1.25}
+							width={256}
+							onReady={({ viewer }) => {
+								viewer.fov = 35;
+								viewer.camera.position.x = 22 * Math.sin(0.01) - 20;
+								viewer.camera.position.y = 22 * Math.sin(0.01) + 15;
+								viewer.controls.enableZoom = false;
+								viewer.controls.enablePan = false;
+							}}
+						/>
+					)}
 				</motion.div>
+
 				<LaunchButton center={scrollY > 0} />
 			</article>
 		</MotionCard>

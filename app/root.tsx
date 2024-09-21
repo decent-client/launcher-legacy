@@ -6,6 +6,7 @@ import {
 	Scripts,
 	ScrollRestoration,
 } from "@remix-run/react";
+import { CommandPalette } from "~/components/command-palette";
 import { WindowTitleBar } from "~/components/layout/title-bar";
 import { Toaster } from "~/components/ui/sonner";
 import { Providers } from "~/lib/providers";
@@ -25,13 +26,6 @@ export default function App() {
 			<Document>
 				<WindowTitleBar />
 				<Outlet />
-				<Toaster
-					position="bottom-right"
-					theme="dark"
-					offset={16}
-					gap={8}
-					richColors
-				/>
 			</Document>
 		</Providers>
 	);
@@ -59,6 +53,14 @@ function Document({
 				)}
 			>
 				{children}
+				<CommandPalette />
+				<Toaster
+					position="bottom-right"
+					theme="dark"
+					offset={16}
+					gap={8}
+					richColors
+				/>
 				<ScrollRestoration />
 				<Scripts />
 			</body>

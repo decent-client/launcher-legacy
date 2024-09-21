@@ -18,7 +18,7 @@ function set(
 	if (!el || !(el instanceof HTMLElement)) return;
 	const originalStyles: Style = {};
 
-	Object.entries(styles).forEach(([key, value]: [string, string]) => {
+	for (const [key, value] of Object.entries(styles)) {
 		if (key.startsWith("--")) {
 			el.style.setProperty(key, value);
 			return;
@@ -27,7 +27,7 @@ function set(
 		// @ts-ignore
 		originalStyles[key] = (el.style as CSSStyleDeclaration)[key]; // @ts-ignore
 		(el.style as CSSStyleDeclaration)[key] = value;
-	});
+	}
 
 	if (ignoreCache) return;
 
@@ -46,10 +46,10 @@ function reset(el: Element | HTMLElement | null, prop?: string): void {
 		// @ts-ignore
 		(el.style as CSSStyleDeclaration)[prop] = originalStyles[prop];
 	} else {
-		Object.entries(originalStyles).forEach(([key, value]) => {
+		for (const [key, value] of Object.entries(originalStyles)) {
 			// @ts-ignore
 			(el.style as CSSStyleDeclaration)[key] = value;
-		});
+		}
 	}
 }
 
@@ -65,7 +65,7 @@ const TRANSITIONS = {
 const Dialog = ({
 	...props
 }: React.ComponentProps<typeof DialogPrimitive.Root>): JSX.Element => {
-	const [isOpen, setIsOpen] = React.useState(false);
+	const [open, setOpen] = React.useState(false);
 
 	function getScale(): number {
 		return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
@@ -98,16 +98,12 @@ const Dialog = ({
 		}
 	}
 
-	return (
-		<DialogPrimitive.Root
-			onOpenChange={(open: boolean) => {
-				setIsOpen(open);
-				scaleBackground(open);
-			}}
-			open={isOpen}
-			{...props}
-		/>
-	);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	React.useEffect(() => {
+		scaleBackground(props.open ?? open);
+	}, [props.open, open]);
+
+	return <DialogPrimitive.Root onOpenChange={setOpen} {...props} />;
 };
 Dialog.displayName = "Dialog";
 
@@ -126,7 +122,7 @@ const DialogOverlay = React.forwardRef<
 	<DialogPrimitive.Overlay
 		ref={ref}
 		className={cn(
-			`data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/75 data-[state=closed]:animate-out data-[state=open]:animate-in`,
+			"data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/75 data-[state=closed]:animate-out data-[state=open]:animate-in",
 			className,
 		)}
 		{...props}

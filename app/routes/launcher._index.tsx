@@ -4,6 +4,7 @@ import { AddFriendButton, FriendList } from "~/components/friends";
 import { LauncherCard } from "~/components/launcher-card";
 import { NewsFeed } from "~/components/news-feed";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 import type { Handle } from "~/lib/types/handle";
 
 export const handle: Handle = {

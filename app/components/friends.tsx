@@ -15,6 +15,7 @@ import {
 	CommandList,
 } from "~/components/ui/command";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import { usePlayerTexture } from "~/hooks/player-texture";
 import { cn } from "~/lib/utils";
 
 const friends = [
@@ -31,7 +32,7 @@ const friends = [
 	},
 	{
 		skin: "https://skins.mcstats.com/face/1c682784-a9cc-43bd-8007-3aa2e3878712",
-		username: "liqwtf",
+		username: "SillyBillyTime",
 		online: true,
 		playing: "Hypixel",
 	},
@@ -116,6 +117,7 @@ export function FriendList({ className }: { className?: string }) {
 			<ScrollArea className="rounded-none ">
 				<CommandList className="ml-8 max-h-96 w-56">
 					{friends.map((friend) => {
+						const { headTexture } = usePlayerTexture(friend.username);
 						const [isHovering, setIsHovering] = useState(false);
 
 						const keywords = [
@@ -152,7 +154,7 @@ export function FriendList({ className }: { className?: string }) {
 									/>
 								)} */}
 								<img
-									src={friend.skin}
+									src={headTexture}
 									className="z-50 rounded-sm"
 									alt="Face"
 									width={20}
