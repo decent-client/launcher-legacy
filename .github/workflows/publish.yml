@@ -8,7 +8,7 @@ on:
         
 
 jobs:
-  publish-tauri:
+  build-and-publish-launcher:
     permissions:
       contents: write
     strategy:
