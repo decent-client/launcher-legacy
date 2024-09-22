@@ -29,7 +29,6 @@ async fn init_auth(app_handle: tauri::AppHandle) -> Result<(), Box<dyn std::erro
         ClientId::new("f7770de8-077a-46ea-9604-908154eee29b".to_string()),
         None,
         // Some(ClientSecret::new(
-        //     "Ycs8Q~TTzSf_i3q_s2KzzEzLXGu.YA4pvT3C1aa7".to_string(),
         // )),
         AuthUrl::new(MSA_AUTHORIZE_URL.to_string()).unwrap(),
         Some(TokenUrl::new(MSA_TOKEN_URL.to_string()).unwrap()),
