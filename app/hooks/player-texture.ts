@@ -1,36 +1,54 @@
 import { useEffect, useState } from "react";
 import fullFallback from "~/../public/images/fallback/full.png";
 import faceFallback from "~/../public/images/fallback/head.png";
+import { useSessionStorage } from "~/hooks/storage";
 import { getPlayerFaceTexture, getPlayerTexture } from "~/lib/tauri";
 
-// TODO: Implement texture caching
+type PlayerTextureCache = Record<
+	string,
+	{ headTexture: string; fullTexture: string }
+>;
 
 export function usePlayerTexture(username: string) {
+	const [cache, setCache] = useSessionStorage<PlayerTextureCache>(
+		"player-texture-cache",
+		{},
+	);
 	const [texture, setTexture] = useState<{
 		headTexture: string;
 		fullTexture: string;
 		loading: boolean;
 	}>({ headTexture: faceFallback, fullTexture: fullFallback, loading: true });
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies:
 	useEffect(() => {
-		async function fetchTexture() {
+		async function getTexture() {
+			if (cache[username]) {
+				return setTexture({ ...cache[username], loading: false });
+			}
+
 			try {
+				const headTexture = await getPlayerFaceTexture(username);
+				const fullTexture = await getPlayerTexture(username);
+
+				setCache({
+					...cache,
+					[username]: { headTexture, fullTexture },
+				});
+
 				setTexture({
-					headTexture: await getPlayerFaceTexture(username),
-					fullTexture: await getPlayerTexture(username),
+					headTexture,
+					fullTexture,
 					loading: false,
 				});
 			} catch (error) {
-				setTexture({
-					...texture,
+				setTexture((prevTexture) => ({
+					...prevTexture,
 					loading: false,
-				});
-				console.error("Failed to get player face:", error);
+				}));
 			}
 		}
 
-		fetchTexture();
+		getTexture();
 	}, []);
 
 	return texture;
