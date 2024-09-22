@@ -4,7 +4,7 @@ use tauri::Manager;
 use tauri_plugin_decorum::WebviewWindowExt;
 
 mod commands;
-mod window_ext;
+mod utils;
 
 pub fn run() {
     tauri::Builder::default()
@@ -15,7 +15,7 @@ pub fn run() {
 
             for window_name in ["splash-screen", "main-launcher"] {
                 if let Some(window) = app.get_webview_window(window_name) {
-                    window_ext::apply_window_effects(&window);
+                    utils::window_ext::apply_window_effects(&window);
 
                     #[cfg(target_os = "macos")]
                     {
@@ -47,10 +47,11 @@ pub fn run() {
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_decorum::init())
         .invoke_handler(tauri::generate_handler![
-            commands::setup_windows,
-            commands::show_snap_overlay,
-            commands::get_player_face,
-            commands::get_player_texture,
+            commands::window::setup_windows,
+            commands::window::show_snap_overlay,
+            commands::texture::get_player_face,
+            commands::texture::get_player_texture,
+            commands::auth::setup_auth,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
