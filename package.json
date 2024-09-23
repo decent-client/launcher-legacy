@@ -33,6 +33,7 @@
     "@remix-run/serve": "^2.11.2",
     "@tauri-apps/plugin-fs": "^2.0.0-rc.2",
     "@tauri-apps/plugin-os": "^2.0.0-rc.1",
+    "@tauri-apps/plugin-window-state": "^2.0.0-rc.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",

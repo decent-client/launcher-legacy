@@ -1,60 +1,60 @@
 {
-  "productName": "decent-client",
-  "version": "0.0.2",
-  "identifier": "gg.decent-client.app",
-  "build": {
-    "frontendDist": "../build/client",
-    "devUrl": "http://localhost:5173",
-    "beforeDevCommand": "bun run dev",
-    "beforeBuildCommand": "bun run build"
-  },
-  "app": {
-    "windows": [
-      {
-        "title": "Decent Client - Launcher",
-        "label": "main-launcher",
-        "url": "launcher",
-        "width": 1086,
-        "height": 548,
-        "minWidth": 792,
-        "minHeight": 540,
-        "center": true,
-        "resizable": true,
-        "transparent": true,
-        "decorations": false,
-        "visible": false,
-        "hiddenTitle": true,
-        "titleBarStyle": "Overlay"
-      },
-      {
-        "title": "Decent Client",
-        "label": "splash-screen",
-        "url": "splash-screen",
-        "width": 400,
-        "height": 200,
-        "center": true,
-        "resizable": false,
-        "transparent": true,
-        "decorations": false,
-        "visible": true,
-        "hiddenTitle": true,
-        "titleBarStyle": "Overlay"
-      }
-    ],
-    "security": {
-      "csp": null
-    }
-  },
-  "bundle": {
-    "active": true,
-    "targets": "all",
-    "icon": [
-      "icons/32x32.png",
-      "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
-    ]
-  },
-  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json"
+	"productName": "decent-client",
+	"version": "0.0.2",
+	"identifier": "gg.decent-client.app",
+	"build": {
+		"frontendDist": "../build/client",
+		"devUrl": "http://localhost:5173",
+		"beforeDevCommand": "bun run dev",
+		"beforeBuildCommand": "bun run build"
+	},
+	"app": {
+		"windows": [
+			{
+				"title": "Decent Client - Launcher",
+				"label": "main-launcher",
+				"url": "launcher",
+				"width": 1086,
+				"height": 548,
+				"minWidth": 792,
+				"minHeight": 540,
+				"center": true,
+				"resizable": true,
+				"transparent": true,
+				"decorations": false,
+				"visible": false,
+				"hiddenTitle": true,
+				"titleBarStyle": "Overlay"
+			},
+			{
+				"title": "Decent Client",
+				"label": "splash-screen",
+				"url": "splash-screen",
+				"width": 400,
+				"height": 200,
+				"center": true,
+				"resizable": false,
+				"transparent": true,
+				"decorations": false,
+				"visible": true,
+				"hiddenTitle": true,
+				"titleBarStyle": "Overlay"
+			}
+		],
+		"security": {
+			"csp": null
+		}
+	},
+	"bundle": {
+		"active": true,
+		"targets": "all",
+		"icon": [
+			"icons/32x32.png",
+			"icons/128x128.png",
+			"icons/128x128@2x.png",
+			"icons/icon.icns",
+			"icons/icon.ico"
+		]
+	},
+	"$schema": "../node_modules/@tauri-apps/cli/config.schema.json"
 }
