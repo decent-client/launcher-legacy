@@ -1,66 +1,40 @@
 # Decent Client - Launcher 🚀
 
-## Features
-
-None because it sucks zzz
-
+## Features 
+1. TODO
 
 ## Development
 
-### Windows Prerequisites 
+### Prerequisites
 
-1. Download the [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) installer and open it to begin installation.
-2. During installation check the *"Desktop development with C++"* option.
+Before you being, ensure you have the following installed on your system
+1. [ ] Node.JS (v.20 or later)
+2. [ ] Rust and Cargo (v.1.70 or later)
+3. [ ] Bun 
 
-![Microsoft C++ Build Tools](https://v2.tauri.app/_astro/visual-studio-build-tools-installer.BWhlyd8N_Z2amjwc.webp)
+> [!TIP]
+> 1. [ ] Install [required Tauri prerequisites](https://v2.tauri.app/start/prerequisites/).
+> 2. [ ] Full guide on how to [install bun](https://bun.sh/docs/installation).
 
-> [!NOTE]
-> Tauri uses Microsoft Edge WebView2 to render content on Windows. WebView2 is already installed on Windows 10 (from version 1803 onward) and later versions of Windows. If you are below that version of Windows [download it here](https://developer.microsoft.com/en-us/microsoft-edge/webview2/#download-section).
+### Setup the Application
 
-
-### MacOS Prerequisites 
-
-1. Download and install Xcode from one of the following places:
-   - [Mac App Store](https://apps.apple.com/gb/app/xcode/id497799835?mt=12)
-   - [Apple Developer website](https://developer.apple.com/xcode/resources/)
-
-### Linux Prerequisites 
-
-1. TODO
-
-### Install Rust
-> **MacOS and Linux**
-> ```sh
-> $ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
-> ```
-
-> **Windows** \
-> Visit https://www.rust-lang.org/tools/install to install `rustup`.
-
-
-### Install Bun
-> **MacOS and Linux**
-> ```sh
-> $ curl -fsSL https://bun.sh/install | bash
-> ```
-
-> **Windows** 
-> ```sh
-> $ powershell -c "irm bun.sh/install.ps1 | iex"
-> ```
-
-> [!NOTE]
-> Full guide found at https://v2.tauri.app/start/prerequisites/.
-
-## Running the Application
-```sh
-$ bun tauri dev
-```
-
-### Building for Release
-> ```sh
-> $ bun tauri build
-> ```
+2. Run `bun install` to install the dependencies
+3. Run `bun tauri dev` to start the development server
+   - This will open a new window on your system.
 
 ## Contributing
-TODO
+
+See the [CONTRIBUTING](CONTRIBUTING.md) file for more details.
+
+1. [ ] Fork the repository
+2. [ ] Create a new branch
+3. [ ] Make your changes
+4. [ ] Commit your changes
+5. [ ] Push your changes
+6. [ ] Open a pull request
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+
