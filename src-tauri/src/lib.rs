@@ -8,15 +8,17 @@ mod commands;
 mod utils;
 
 pub fn run() {
+    let state_flags = StateFlags::POSITION | StateFlags::SIZE | StateFlags::MAXIMIZED;
+
     tauri::Builder::default()
-        .setup(|app| {
+        .setup(move |app| {
             let splash_window = app.get_webview_window("splash-screen").unwrap();
 
             splash_window.set_focus().unwrap();
 
             for window_name in ["splash-screen", "main-launcher"] {
                 if let Some(window) = app.get_webview_window(window_name) {
-                    let _ = window.restore_state(StateFlags::all());
+                    // let _ = window.restore_state(state_flags);
 
                     utils::window_ext::apply_window_effects(&window);
 
@@ -30,10 +32,10 @@ pub fn run() {
 
             Ok(())
         })
-        .on_window_event(|window, event| match event {
+        .on_window_event(move |window, event| match event {
             tauri::WindowEvent::CloseRequested { api, .. } => {
                 let app = window.app_handle();
-                let _ = app.save_window_state(StateFlags::all());
+                let _ = app.save_window_state(state_flags);
 
                 if window.label() == "main-launcher" {
                     window.hide().unwrap();
@@ -52,7 +54,7 @@ pub fn run() {
         .plugin(tauri_plugin_system_info::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_os::init())
-        .plugin(tauri_plugin_decorum::init())
+        .plugin(tauri_plugin_decorum::init()) // TODO: Replace with own implementation
         .invoke_handler(tauri::generate_handler![
             commands::window::setup_windows,
             commands::window::show_snap_overlay,
