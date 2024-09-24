@@ -1,8 +1,9 @@
 use tauri::Manager;
 use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
+use utils::window_ext::WebviewWindowExt;
 
 #[cfg(target_os = "macos")]
-use tauri_plugin_decorum::WebviewWindowExt;
+use tauri_plugin_decorum::WebviewWindowExt as DecorumWebviewWindowExt;
 
 mod commands;
 mod utils;
@@ -18,9 +19,8 @@ pub fn run() {
 
             for window_name in ["splash-screen", "main-launcher"] {
                 if let Some(window) = app.get_webview_window(window_name) {
-                    // let _ = window.restore_state(state_flags);
-
-                    utils::window_ext::apply_window_effects(&window);
+                    window.restore_state(state_flags).ok();
+                    window.apply_window_effects().ok();
 
                     #[cfg(target_os = "macos")]
                     {
@@ -35,7 +35,7 @@ pub fn run() {
         .on_window_event(move |window, event| match event {
             tauri::WindowEvent::CloseRequested { api, .. } => {
                 let app = window.app_handle();
-                let _ = app.save_window_state(state_flags);
+                app.save_window_state(state_flags).ok();
 
                 if window.label() == "main-launcher" {
                     window.hide().unwrap();
