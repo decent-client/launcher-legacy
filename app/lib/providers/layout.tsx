@@ -4,14 +4,14 @@ type Options = {
 	scrollY: number;
 };
 
-type LauncherLayoutContext = {
+type LayoutContext = {
 	newsFeedSection: Options;
 	setNewsFeedSection: (options: Options) => void;
 };
 
-const LauncherLayout = createContext<LauncherLayoutContext | null>(null);
+const Layout = createContext<LayoutContext | null>(null);
 
-export function LauncherLayoutProvider({
+export function LayoutProvider({
 	children,
 }: {
 	children: React.ReactNode;
@@ -21,24 +21,22 @@ export function LauncherLayoutProvider({
 	});
 
 	return (
-		<LauncherLayout.Provider
+		<Layout.Provider
 			value={useMemo(
 				() => ({ newsFeedSection, setNewsFeedSection }),
 				[newsFeedSection],
 			)}
 		>
 			{children}
-		</LauncherLayout.Provider>
+		</Layout.Provider>
 	);
 }
 
-export const useLauncherLayout = () => {
-	const context = useContext(LauncherLayout);
+export const useLayout = () => {
+	const context = useContext(Layout);
 
 	if (!context) {
-		throw new Error(
-			"useLauncherLayout must be used within a LauncherLayoutProvider",
-		);
+		throw new Error("useLayout must be used within a LayoutProvider");
 	}
 
 	return context;

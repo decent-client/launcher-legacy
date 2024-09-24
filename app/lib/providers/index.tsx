@@ -1,7 +1,7 @@
 import { TooltipProvider } from "~/components/ui/tooltip";
-import { LauncherLayoutProvider } from "~/lib/providers/launcher-layout-provider";
-import { SettingsProvider } from "~/lib/providers/settings-provider";
-import { ThemeProvider } from "~/lib/providers/theme-provider";
+import { LauncherLayoutProvider } from "~/lib/providers/launcher-layout";
+import { SettingsProvider } from "~/lib/providers/settings";
+import { ThemeProvider } from "~/lib/providers/theme";
 
 export function Providers({ children }: { children: React.ReactNode }) {
 	return (

@@ -6,7 +6,7 @@ import {
 	XCircle,
 } from "lucide-react";
 import { Toaster as Sonner } from "sonner";
-import { useTheme } from "~/lib/providers/theme-provider";
+import { useTheme } from "~/lib/providers/theme";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 

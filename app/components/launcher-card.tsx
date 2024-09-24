@@ -8,7 +8,7 @@ import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Skeleton } from "~/components/ui/skeleton";
 import { usePlayerTexture } from "~/hooks/player-texture";
-import { useLauncherLayout } from "~/lib/providers/launcher-layout-provider";
+import { useLayout } from "~/lib/providers/layout";
 import { cn } from "~/lib/utils";
 
 const MotionCard = motion.create(Card);
@@ -17,7 +17,7 @@ const MotionButton = motion.create(Button);
 export function LauncherCard({ className }: Readonly<{ className?: string }>) {
 	const {
 		newsFeedSection: { scrollY },
-	} = useLauncherLayout();
+	} = useLayout();
 	const { fullTexture, loading } = usePlayerTexture("liqw");
 
 	return (

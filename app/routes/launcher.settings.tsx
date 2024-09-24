@@ -15,7 +15,7 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import { useDebouncedCallback } from "~/hooks/debounce";
 import type { Settings as SettingsType } from "~/lib/constants/settings";
 import { settingsSchema, settingsTabs } from "~/lib/constants/settings";
-import { useSettings } from "~/lib/providers/settings-provider";
+import { useSettings } from "~/lib/providers/settings";
 import type { Handle } from "~/lib/types/handle";
 import { cn } from "~/lib/utils";
 
