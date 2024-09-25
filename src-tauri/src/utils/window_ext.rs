@@ -1,16 +1,13 @@
-use tauri::{Result, Runtime, WebviewWindow};
+use tauri::{
+    window::{Effect, EffectsBuilder},
+    Result, Runtime, WebviewWindow,
+};
 
 #[cfg(target_os = "macos")]
-use tauri::window::{Effect, EffectState, EffectsBuilder};
+use tauri::window::EffectState;
 
-#[cfg(target_os = "windows")]
-use tauri::window::{Effect, EffectsBuilder};
 #[cfg(target_os = "windows")]
 use windows_version::OsVersion;
-
-#[cfg(target_os = "macos")]
-#[macro_use]
-extern crate objc;
 
 pub trait WebviewWindowExt {
     fn apply_window_effects(&self) -> Result<()>;
@@ -18,31 +15,35 @@ pub trait WebviewWindowExt {
 
 impl<R: Runtime> WebviewWindowExt for WebviewWindow<R> {
     fn apply_window_effects(&self) -> Result<()> {
+        let mut effects = EffectsBuilder::new();
+
         #[cfg(target_os = "macos")]
         {
-            let _ = self.set_effects(
-                EffectsBuilder::new()
-                    .effect(Effect::Popover)
-                    .state(EffectState::Active)
-                    .build(),
-            );
+            effects = effects
+                .effect(Effect::Popover)
+                .state(EffectState::Active)
+                .radius(16.0);
         }
 
         #[cfg(target_os = "windows")]
         {
             let version = OsVersion::current();
-            let effects;
 
             if version.major > 10 || (version.major == 10 && version.minor >= 22000) {
-                effects = EffectsBuilder::new().effect(Effect::Mica).build();
+                effects = effects.effect(Effect::Mica)
             } else if version.major == 10 {
-                effects = EffectsBuilder::new().effect(Effect::Acrylic).build();
+                effects = effects.effect(Effect::Acrylic)
             } else {
-                effects = EffectsBuilder::new().effect(Effect::Blur).build();
+                effects = effects.effect(Effect::Blur);
             }
-
-            self.set_effects(effects).unwrap();
         }
+
+        #[cfg(target_os = "linux")]
+        {
+            effects = effects;
+        }
+
+        self.set_effects(effects.build())?;
 
         Ok(())
     }
