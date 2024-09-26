@@ -1,4 +1,3 @@
-import { invoke } from "@tauri-apps/api/core";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, ExternalLink, Plus } from "lucide-react";
 import { MicrosoftIcon } from "~/components/icons/microsoft";
@@ -18,18 +17,15 @@ import {
 	TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { usePlayerTexture } from "~/hooks/player-texture";
+import { useSelectedAccount } from "~/lib/providers/account";
+import { setupAuth } from "~/lib/tauri";
 import { cn } from "~/lib/utils";
 
 const MotionButton = motion.create(Button);
 
 export function AccountSelect({ className }: { className?: string }) {
-	const { headTexture } = usePlayerTexture("liqw");
-
-	async function setupAuth() {
-		if (typeof window !== "undefined") {
-			await invoke("setup_auth");
-		}
-	}
+	const { selectedAccount } = useSelectedAccount();
+	const { headTexture } = usePlayerTexture(selectedAccount?.username);
 
 	return (
 		<AnimatePresence>

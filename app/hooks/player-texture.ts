@@ -9,7 +9,7 @@ type PlayerTextureCache = Record<
 	{ headTexture: string; fullTexture: string }
 >;
 
-export function usePlayerTexture(username: string) {
+export function usePlayerTexture(username?: string) {
 	const [cache, setCache] = useSessionStorage<PlayerTextureCache>(
 		"player-texture-cache",
 		{},
@@ -21,35 +21,43 @@ export function usePlayerTexture(username: string) {
 	}>({ headTexture: faceFallback, fullTexture: fullFallback, loading: true });
 
 	useEffect(() => {
-		async function getTexture() {
-			if (cache[username]) {
-				return setTexture({ ...cache[username], loading: false });
-			}
+		if (!username) {
+			setTexture({
+				headTexture: faceFallback,
+				fullTexture: fullFallback,
+				loading: false,
+			});
+		} else {
+			getPlayerTextures(username);
 
-			try {
-				const headTexture = await getPlayerFaceTexture(username);
-				const fullTexture = await getPlayerTexture(username);
+			async function getPlayerTextures(username: string) {
+				if (cache[username]) {
+					return setTexture({ ...cache[username], loading: false });
+				}
 
-				setCache({
-					...cache,
-					[username]: { headTexture, fullTexture },
-				});
+				try {
+					const headTexture = await getPlayerFaceTexture(username);
+					const fullTexture = await getPlayerTexture(username);
 
-				setTexture({
-					headTexture,
-					fullTexture,
-					loading: false,
-				});
-			} catch (error) {
-				setTexture((prevTexture) => ({
-					...prevTexture,
-					loading: false,
-				}));
+					setCache({
+						...cache,
+						[username]: { headTexture, fullTexture },
+					});
+
+					setTexture({
+						headTexture,
+						fullTexture,
+						loading: false,
+					});
+				} catch (error) {
+					setTexture((prevTexture) => ({
+						...prevTexture,
+						loading: false,
+					}));
+				}
 			}
 		}
-
-		getTexture();
-	}, []);
+	}, [username]);
 
 	return texture;
 }

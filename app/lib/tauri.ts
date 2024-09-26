@@ -26,3 +26,7 @@ export async function getPlayerTexture(playerName: string) {
 		throw new Error("Failed to get player texture");
 	}
 }
+
+export async function setupAuth() {
+	await invoke("setup_auth");
+}
