@@ -8,11 +8,17 @@ type Account = {
 
 type SelectedAccountState = {
 	accounts: Account[];
-	selectedAccount: Account | null;
-	setSelectedAccount: (account: Account) => void;
+	selectedAccount: Account | undefined;
+	setSelectedAccount: (value: Account) => void;
 };
 
 const AccountProviderContext = createContext<SelectedAccountState | null>(null);
+
+// TODO: just placeholder, remove later
+const tempAccounts = [
+	{ username: "liqw", active: true },
+	{ username: "liqws_wife", active: false },
+];
 
 type FileNameJSON = `${string}.json`;
 
@@ -24,22 +30,32 @@ export function SelectedAccountProvider({
 	children: React.ReactNode;
 	accountsFile?: FileNameJSON;
 }) {
-	const [accounts, setAccounts] = useState<Account[]>([]);
-	const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
+	const [accounts, setAccounts] = useState<Account[]>(tempAccounts);
+
+	let selectedAccount = accounts.find(({ active }) => active);
 
 	useEffect(() => {
-		setAccounts([{ username: "liqw", active: true }]);
-
 		// watchAccountsFile(accountsFile, setAccounts);
 	}, []);
 
 	useEffect(() => {
-		const activeAccount = accounts.find(({ active }) => active)?.username;
+		const activeAccount = accounts.find(({ active }) => active);
 
 		if (activeAccount) {
-			setSelectedAccount({ username: activeAccount });
+			setSelectedAccount({ username: activeAccount.username });
 		}
 	}, [accounts]);
+
+	function setSelectedAccount(value: Account) {
+		selectedAccount = value;
+
+		setAccounts(
+			accounts.map((account) => ({
+				...account,
+				active: value.username === account.username,
+			})),
+		);
+	}
 
 	return (
 		<AccountProviderContext.Provider
