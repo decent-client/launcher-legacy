@@ -20,6 +20,11 @@
 					"level": "warn",
 					"fix": "safe"
 				}
+			},
+			"correctness": {
+				"useExhaustiveDependencies": {
+					"level": "off"
+				}
 			}
 		}
 	},
