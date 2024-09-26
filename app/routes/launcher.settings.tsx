@@ -36,7 +36,6 @@ export default function Settings() {
 		mode: "onChange",
 	});
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		resetForm();
 

@@ -98,7 +98,6 @@ const Dialog = ({
 		}
 	}
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	React.useEffect(() => {
 		scaleBackground(props.open ?? open);
 	}, [props.open, open]);

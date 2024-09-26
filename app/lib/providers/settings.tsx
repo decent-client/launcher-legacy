@@ -54,7 +54,6 @@ export function SettingsProvider({
 		"preferences",
 	);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		async function initSettings() {
 			initialize(

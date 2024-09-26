@@ -27,7 +27,6 @@ const ReactSkinview3d = ({
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 	const skinviewRef = useRef<SkinViewer | null>(null);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const viewer = new SkinViewer({
 			// biome-ignore lint/style/noNonNullAssertion: <explanation>
