@@ -8,6 +8,7 @@ type Account = {
 
 type SelectedAccountState = {
 	accounts: Account[];
+	setAccounts: (value: Account[]) => void;
 	selectedAccount: Account | undefined;
 	setSelectedAccount: (value: Account) => void;
 };
@@ -61,6 +62,7 @@ export function SelectedAccountProvider({
 		<AccountProviderContext.Provider
 			value={{
 				accounts,
+				setAccounts,
 				selectedAccount,
 				setSelectedAccount,
 			}}
