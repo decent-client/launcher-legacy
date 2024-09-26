@@ -1,7 +1,7 @@
 {
-	"productName": "decent-client",
-	"version": "0.0.3",
+	"productName": "Decent Client - Launcher",
 	"identifier": "gg.decent-client.app",
+	"version": "0.0.3",
 	"build": {
 		"frontendDist": "../build/client",
 		"devUrl": "http://localhost:5173",
