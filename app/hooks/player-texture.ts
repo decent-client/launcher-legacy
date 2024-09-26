@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import fullFallback from "~/../public/images/fallback/full.png";
-import faceFallback from "~/../public/images/fallback/head.png";
+import fullFallback from "~/../public/images/fallback/full.png?url";
+import faceFallback from "~/../public/images/fallback/head.png?url";
 import { useSessionStorage } from "~/hooks/storage";
 import { getPlayerFaceTexture, getPlayerTexture } from "~/lib/tauri";
 
@@ -8,6 +8,11 @@ type PlayerTextureCache = Record<
 	string,
 	{ headTexture: string; fullTexture: string }
 >;
+
+const fallbackTexture = {
+	head: "/images/fallback/head.png",
+	full: "/images/fallback/full.png",
+};
 
 export function usePlayerTexture(username?: string) {
 	const [cache, setCache] = useSessionStorage<PlayerTextureCache>(
@@ -18,7 +23,11 @@ export function usePlayerTexture(username?: string) {
 		headTexture: string;
 		fullTexture: string;
 		loading: boolean;
-	}>({ headTexture: faceFallback, fullTexture: fullFallback, loading: true });
+	}>({
+		headTexture: fallbackTexture.head,
+		fullTexture: fallbackTexture.full,
+		loading: true,
+	});
 
 	useEffect(() => {
 		if (!username) {
