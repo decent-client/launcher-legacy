@@ -3,7 +3,7 @@ use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
 use utils::window_ext::WebviewWindowExt;
 
 #[cfg(target_os = "macos")]
-use tauri_plugin_decorum::WebviewWindowExt as DecorumWebviewWindowExt;
+use tauri_plugin_decorum::WebviewWindowExt;
 
 mod commands;
 mod utils;
@@ -19,8 +19,8 @@ pub fn run() {
 
             for window_name in ["splash-screen", "main-launcher"] {
                 if let Some(window) = app.get_webview_window(window_name) {
-                    window.restore_state(state_flags).ok();
-                    window.apply_window_effects().ok();
+                    let _win_state = window.restore_state(state_flags);
+                    let _win_effect = window.apply_window_effects();
 
                     #[cfg(target_os = "macos")]
                     {
