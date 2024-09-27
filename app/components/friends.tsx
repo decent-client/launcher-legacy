@@ -218,7 +218,7 @@ export function FriendList({ className }: { className?: string }) {
 							</CommandItem>
 						);
 					})}
-					<CommandEmpty className="mr-8">No friends found</CommandEmpty>
+					<CommandEmpty className="mr-8">No friends found.</CommandEmpty>
 				</CommandList>
 			</ScrollArea>
 		</Command>
