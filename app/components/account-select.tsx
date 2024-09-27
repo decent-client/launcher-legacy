@@ -106,44 +106,50 @@ export function AccountSelect({ className }: { className?: string }) {
 						},
 					}}
 				>
-					{accounts.map((account) => {
-						const { headTexture: accountHeadTexture } = usePlayerTexture(
-							account.username,
-						);
+					{accounts.length > 0 ? (
+						accounts.map((account) => {
+							// const { headTexture: accountHeadTexture } = usePlayerTexture(
+							// 	account.username,
+							// );
 
-						return (
-							<Button
-								key={account.username}
-								className={cn(
-									"group/account relative w-full justify-start gap-2.5 pl-1.5",
-									account.active && "bg-blue-500/25 hover:bg-blue-500/50",
-								)}
-								variant={"ghost"}
-								size={"sm"}
-								onClick={() => {
-									setSelectedAccount(account);
-								}}
-							>
-								<img
-									src={accountHeadTexture}
-									className="rounded-sm"
-									alt="Face"
-									width={20}
-									height={20}
-								/>
-								<span className="font-minecraft text-base transition-[margin] group-hover/account:ml-1">
-									{account.username}
-								</span>
-								{account.active && (
-									<Check
-										className="absolute right-4"
-										strokeWidth={2.5}
-										size={16}
+							return (
+								<Button
+									key={account.username}
+									className={cn(
+										"group/account relative w-full justify-start gap-2.5 pl-1.5",
+										account.active && "bg-blue-500/25 hover:bg-blue-500/50",
+									)}
+									variant={"ghost"}
+									size={"sm"}
+									onClick={() => {
+										setSelectedAccount(account);
+									}}
+								>
+									<img
+										// src={accountHeadTexture}
+										className="rounded-sm"
+										alt="Face"
+										width={20}
+										height={20}
 									/>
-								)}
-							</Button>
-						);
-					})}
+									<span className="font-minecraft text-base transition-[margin] group-hover/account:ml-1">
+										{account.username}
+									</span>
+									{account.active && (
+										<Check
+											className="absolute right-4"
+											strokeWidth={2.5}
+											size={16}
+										/>
+									)}
+								</Button>
+							);
+						})
+					) : (
+						<div className="px-8 py-6 text-center font-normal text-base">
+							You do not have any accounts added.
+						</div>
+					)}
 				</motion.div>
 				{/* <Separator /> */}
 				<DialogFooter>
