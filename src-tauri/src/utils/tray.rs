@@ -5,6 +5,8 @@ use tauri::{
 };
 
 pub fn create_tray<R: Runtime>(app: &AppHandle<R>) -> Result<()> {
+    let main_window = app.get_webview_window("main-launcher").unwrap();
+
     let _ = TrayIconBuilder::with_id("tray")
         .icon(app.default_window_icon().unwrap().clone())
         .menu(&Menu::with_items(
