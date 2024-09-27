@@ -10,7 +10,6 @@ import {
 } from "@tauri-apps/plugin-fs";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAsyncEffect } from "~/hooks/async-effect";
-import { useMounted } from "~/hooks/mounted";
 
 type Account = {
 	username: string;
@@ -22,7 +21,6 @@ type SelectedAccountState = {
 	setAccounts: (value: Account[]) => void;
 	selectedAccount: Account | undefined;
 	setSelectedAccount: (value: Account) => void;
-	isMounted: boolean;
 };
 
 type FileStructure = {
@@ -42,7 +40,6 @@ export function SelectedAccountProvider({
 	accountsFile?: FileNameJSON;
 }) {
 	const [accounts, setAccounts] = useState<Account[] | []>([]);
-	const isMounted = useMounted();
 
 	let selectedAccount = accounts.find(({ active }) => active);
 
@@ -117,7 +114,6 @@ export function SelectedAccountProvider({
 				setAccounts,
 				selectedAccount,
 				setSelectedAccount,
-				isMounted,
 			}}
 			{...props}
 		>
