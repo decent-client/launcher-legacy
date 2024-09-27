@@ -30,6 +30,8 @@ pub fn run() {
                 }
             }
 
+            utils::tray::create_tray(app.handle())?;
+
             Ok(())
         })
         .on_window_event(move |window, event| match event {
@@ -54,7 +56,7 @@ pub fn run() {
         .plugin(tauri_plugin_system_info::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_os::init())
-        .plugin(tauri_plugin_decorum::init()) // TODO: Replace with own implementation
+        .plugin(tauri_plugin_decorum::init())
         .invoke_handler(tauri::generate_handler![
             commands::window::setup_windows,
             commands::window::show_snap_overlay,
