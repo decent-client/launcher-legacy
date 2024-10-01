@@ -8,10 +8,19 @@ import {
 	watchImmediate,
 	writeTextFile,
 } from "@tauri-apps/plugin-fs";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useState,
+} from "react";
+import { toast } from "sonner";
 import { useAsyncEffect } from "~/hooks/async-effect";
+import { useMounted } from "~/hooks/mounted";
+import { sleep } from "../utils";
 
-type Account = {
+export type Account = {
 	username: string;
 	active?: boolean;
 };
@@ -41,70 +50,68 @@ export function SelectedAccountProvider({
 }) {
 	const [accounts, setAccounts] = useState<Account[] | []>([]);
 
-	let selectedAccount = accounts.find(({ active }) => active);
+	// let selectedAccount = accounts.find(({ active }) => active);
+	let selectedAccount = { username: "liqw", active: true } as Account;
 
-	useAsyncEffect(async () => {
-		await readAccountsFile();
+	const setSelectedAccount = useCallback(
+		async (value: Account) => {
+			const updatedAccounts = updateAccounts(accounts, value);
+			const preservedState = accounts;
 
-		const unwatch = await watch(
-			accountsFile,
-			(event) => {
-				console.log(event);
-			},
-			{
-				baseDir: BaseDirectory.AppLog,
-				delayMs: 500,
-			},
-		);
+			setAccounts(updatedAccounts);
 
-		return () => unwatch();
+			let caughtError = false;
+
+			try {
+				await sleep(1000);
+				throw Error("error");
+			} catch (error) {
+				toast.error("Failed to switch accounts.");
+
+				caughtError = true;
+			} finally {
+				if (!caughtError) {
+					selectedAccount = value;
+					setAccounts(updatedAccounts);
+				} else {
+					setAccounts(preservedState);
+				}
+			}
+		},
+		[accounts],
+	);
+
+	useEffect(() => {
+		async function initAccounts() {
+			const content = await getAccountsFile(accountsFile);
+
+			if (typeof content !== "undefined") {
+				setAccounts(
+					content.map((s) => ({ ...s, active: s.username === "liqw" })),
+				);
+			}
+		}
+
+		initAccounts();
 	}, []);
 
 	useEffect(() => {
-		const activeAccount = accounts.find(({ active }) => active);
-
-		if (activeAccount) {
-			setSelectedAccount({ username: activeAccount.username });
+		if (!selectedAccount && accounts.length > 0) {
+			setSelectedAccount(accounts[0]);
 		}
 	}, [accounts]);
 
-	async function readAccountsFile() {
-		if (await exists(accountsFile, { baseDir: BaseDirectory.AppData })) {
-			readTextFile(accountsFile, {
-				baseDir: BaseDirectory.AppData,
-			}).then((content) => {
-				setAccounts((JSON.parse(content) as FileStructure).accounts);
-			});
-		} else {
-			try {
-				// if (!(await exists(accountsFile, { baseDir: BaseDirectory.AppData }))) {
-				// 	await mkdir(await appDataDir());
-				// }
-
-				await writeTextFile(
-					accountsFile,
-					JSON.stringify({ accounts: [] } as FileStructure),
-					{
-						baseDir: BaseDirectory.AppData,
-					},
-				);
-			} catch (error) {
-				console.error("Error creating settings file: ", error);
-			}
-		}
-	}
-
-	function setSelectedAccount(value: Account) {
-		selectedAccount = value;
-
-		if (accounts) {
-			setAccounts(
-				accounts.map((account) => ({
-					...account,
-					active: value.username === account.username,
-				})),
-			);
-		}
+	function updateAccounts(
+		accounts: Account[],
+		newAccount: Account,
+		identifier: keyof Account = "username",
+	) {
+		return accounts.map((account) => ({
+			...account,
+			active:
+				account[identifier as keyof Account] ===
+				newAccount[identifier as keyof Account],
+		}));
 	}
 
 	return (
@@ -132,3 +139,31 @@ export const useSelectedAccount = () => {
 
 	return context;
 };
+
+async function getAccountsFile(fileName: FileNameJSON) {
+	if (await exists(fileName, { baseDir: BaseDirectory.AppData })) {
+		return (
+			JSON.parse(
+				await readTextFile(fileName, {
+					baseDir: BaseDirectory.AppData,
+				}),
+			) as FileStructure
+		).accounts;
+	}
+
+	try {
+		// if (!(await exists(accountsFile, { baseDir: BaseDirectory.AppData }))) {
+		// 	await mkdir(await appDataDir());
+		// }
+
+		await writeTextFile(
+			fileName,
+			JSON.stringify({ accounts: [] } as FileStructure),
+			{
+				baseDir: BaseDirectory.AppData,
+			},
+		);
+	} catch (error) {
+		console.error("Error creating settings file: ", error);
+	}
+}

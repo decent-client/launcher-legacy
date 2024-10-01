@@ -108,9 +108,9 @@ export function AccountSelect({ className }: { className?: string }) {
 				>
 					{accounts.length > 0 ? (
 						accounts.map((account) => {
-							const { headTexture: accountHeadTexture } = usePlayerTexture(
-								account.username,
-							);
+							// const { headTexture: accountHeadTexture } = usePlayerTexture(
+							// 	account.username,
+							// );
 
 							return (
 								<Button
