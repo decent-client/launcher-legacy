@@ -1,5 +1,4 @@
 use tauri::Manager;
-use tauri_plugin_window_state::{AppHandleExt, StateFlags, WindowExt};
 use utils::window_ext::WebviewWindowExt;
 
 #[cfg(target_os = "macos")]
@@ -9,8 +8,6 @@ mod commands;
 mod utils;
 
 pub fn run() {
-    let state_flags = StateFlags::POSITION | StateFlags::SIZE | StateFlags::MAXIMIZED;
-
     tauri::Builder::default()
         .setup(move |app| {
             let splash_window = app.get_webview_window("splash-screen").unwrap();
@@ -19,8 +16,7 @@ pub fn run() {
 
             for window_name in ["splash-screen", "main-launcher"] {
                 if let Some(window) = app.get_webview_window(window_name) {
-                    let _win_state = window.restore_state(state_flags);
-                    let _win_effect = window.apply_window_effects();
+                    window.apply_window_effects().unwrap();
 
                     #[cfg(target_os = "macos")]
                     {
@@ -36,9 +32,6 @@ pub fn run() {
         })
         .on_window_event(move |window, event| match event {
             tauri::WindowEvent::CloseRequested { api, .. } => {
-                let app = window.app_handle();
-                app.save_window_state(state_flags).ok();
-
                 if window.label() == "main-launcher" {
                     window.hide().unwrap();
                     api.prevent_close();
@@ -52,7 +45,6 @@ pub fn run() {
                 window.set_focus().unwrap();
             }
         }))
-        .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_system_info::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_os::init())
