@@ -8,7 +8,9 @@ mod commands;
 mod utils;
 
 pub fn run() {
-    tauri::Builder::default()
+    let mut builder = tauri::Builder::default();
+
+    builder = builder
         .setup(move |app| {
             let splash_window = app.get_webview_window("splash-screen").unwrap();
 
@@ -47,8 +49,14 @@ pub fn run() {
         }))
         .plugin(tauri_plugin_system_info::init())
         .plugin(tauri_plugin_fs::init())
-        .plugin(tauri_plugin_os::init())
-        .plugin(tauri_plugin_decorum::init())
+        .plugin(tauri_plugin_os::init());
+
+    #[cfg(target_os = "macos")]
+    {
+        builder = builder.plugin(tauri_plugin_decorum::init());
+    }
+
+    builder
         .invoke_handler(tauri::generate_handler![
             commands::window::setup_windows,
             commands::window::show_snap_overlay,
