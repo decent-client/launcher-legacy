@@ -1,19 +1,19 @@
-use tauri::window::EffectsBuilder;
+use tauri::{window::EffectsBuilder, WebviewWindow};
 
 #[cfg(target_os = "macos")]
 use tauri::window::{Effect, EffectState};
 
 #[cfg(target_os = "windows")]
-use tauri::{window::Effect, Result, WebviewWindow};
+use tauri::{window::Effect, Result};
 #[cfg(target_os = "windows")]
 use windows_version::OsVersion;
 
 pub trait WebviewWindowExt {
-    fn apply_window_effects(&self) -> Result<()>;
+    fn apply_window_effects(&self) -> Result<&WebviewWindow>;
 }
 
 impl WebviewWindowExt for WebviewWindow {
-    fn apply_window_effects(&self) -> Result<()> {
+    fn apply_window_effects(&self) -> Result<&WebviewWindow> {
         let mut effects = EffectsBuilder::new();
 
         #[cfg(target_os = "macos")]
@@ -44,6 +44,6 @@ impl WebviewWindowExt for WebviewWindow {
 
         self.set_effects(effects.build())?;
 
-        Ok(())
+        Ok(self)
     }
 }
