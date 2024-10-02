@@ -72,7 +72,7 @@ pub async fn get_player_face(player_name: String) -> Result<String, String> {
     // Convert to base64
     let mut buffer = Vec::new();
     combined_face
-        .write_to(&mut Cursor::new(&mut buffer), image::ImageOutputFormat::Png)
+        .write_to(&mut Cursor::new(&mut buffer), image::ImageFormat::Png)
         .map_err(|e| e.to_string())?;
     let base64_image = general_purpose::STANDARD.encode(&buffer);
 
