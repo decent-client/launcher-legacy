@@ -2,7 +2,7 @@ use tauri::Manager;
 use utils::window_ext::WebviewWindowExt;
 
 #[cfg(target_os = "macos")]
-use tauri_plugin_decorum::WebviewWindowExt;
+use tauri_plugin_decorum::WebviewWindowExt as DecorumWebviewWindowExt;
 
 mod commands;
 mod utils;
