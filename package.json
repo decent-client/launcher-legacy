@@ -37,7 +37,7 @@
 		"cmdk": "1.0.0",
 		"deepmerge-ts": "^7.1.0",
 		"framer-motion": "^11.5.4",
-		"isbot": "^4.1.0",
+		"isbot": "^5.1.17",
 		"lucide-react": "^0.447.0",
 		"react": "^18.3.1",
 		"react-dom": "^18.2.0",
