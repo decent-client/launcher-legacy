@@ -14,15 +14,19 @@ pub fn setup_windows(app_handle: tauri::AppHandle) {
 pub async fn show_snap_overlay() {
     #[cfg(target_os = "windows")]
     {
-        use enigo::{Enigo, Key, KeyboardControllable};
+        use enigo::{
+            Direction::{Click, Press, Release},
+            Enigo, Key, Keyboard, Settings,
+        };
 
-        let mut enigo = Enigo::new();
-        enigo.key_down(Key::Meta);
-        enigo.key_click(Key::Layout('z'));
-        enigo.key_up(Key::Meta);
+        let mut enigo = Enigo::new(&Settings::default()).unwrap();
+
+        enigo.key(Key::Meta, Press).unwrap();
+        enigo.key(Key::Z, Click).unwrap();
+        enigo.key(Key::Meta, Release).unwrap();
 
         std::thread::sleep(std::time::Duration::from_millis(50));
 
-        enigo.key_click(Key::Alt);
+        enigo.key(Key::Alt, Click).unwrap();
     }
 }
