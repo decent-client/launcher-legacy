@@ -1,11 +1,7 @@
-import { appDataDir } from "@tauri-apps/api/path";
 import {
 	BaseDirectory,
 	exists,
-	mkdir,
 	readTextFile,
-	watch,
-	watchImmediate,
 	writeTextFile,
 } from "@tauri-apps/plugin-fs";
 import {
@@ -16,9 +12,6 @@ import {
 	useState,
 } from "react";
 import { toast } from "sonner";
-import { useAsyncEffect } from "~/hooks/async-effect";
-import { useMounted } from "~/hooks/mounted";
-import { sleep } from "../utils";
 
 export type Account = {
 	username: string;
@@ -50,8 +43,7 @@ export function SelectedAccountProvider({
 }) {
 	const [accounts, setAccounts] = useState<Account[] | []>([]);
 
-	// let selectedAccount = accounts.find(({ active }) => active);
-	let selectedAccount = { username: "liqw", active: true } as Account;
+	let selectedAccount = accounts.find(({ active }) => active);
 
 	const setSelectedAccount = useCallback(
 		async (value: Account) => {
@@ -63,8 +55,7 @@ export function SelectedAccountProvider({
 			let caughtError = false;
 
 			try {
-				await sleep(1000);
-				throw Error("error");
+				console.log("hi");
 			} catch (error) {
 				toast.error("Failed to switch accounts.");
 
