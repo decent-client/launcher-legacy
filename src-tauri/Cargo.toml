@@ -32,7 +32,7 @@ tauri-plugin-decorum = "1.1.1"
 minecraft-msa-auth = "0.4.0"
 oauth2 = "4.4.2"
 image = "0.25"
-base64 = "0.21"
+base64 = "0.22"
 
 [target.'cfg(target_os = "windows")'.dependencies]
 enigo = "0.1.3"
