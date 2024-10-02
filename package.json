@@ -10,9 +10,6 @@
 		"tauri:dev": "tauri dev",
 		"check": "biome check --write ./app",
 		"prepare": "husky",
-		"version-patch": "tauri-version patch --no-git",
-		"version-minor": "tauri-version minor --no-git",
-		"version-major": "tauri-version major --no-git",
 		"icon:generate": "tauri icon ./public/app-icon.png"
 	},
 	"dependencies": {
@@ -56,7 +53,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "1.9.1",
 		"@remix-run/dev": "^2.11.2",
-		"@tauri-apps/cli": "^2.0.0-rc.12",
+		"@tauri-apps/cli": "^2.0.0",
 		"@types/react": "^18.2.20",
 		"@types/react-dom": "^18.2.7",
 		"autoprefixer": "^10.4.19",
