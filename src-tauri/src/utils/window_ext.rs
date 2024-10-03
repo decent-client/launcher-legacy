@@ -11,7 +11,6 @@ use windows_version::OsVersion;
 pub trait WebviewWindowExt {
     fn apply_window_effects(&self) -> Result<&WebviewWindow>;
 }
-//
 
 impl WebviewWindowExt for WebviewWindow {
     fn apply_window_effects(&self) -> Result<&WebviewWindow> {
