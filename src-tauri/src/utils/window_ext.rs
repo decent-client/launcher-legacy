@@ -28,12 +28,11 @@ impl WebviewWindowExt for WebviewWindow {
         {
             let version = OsVersion::current();
 
-            if version.major > 10 || (version.major == 10 && version.minor >= 22000) {
-                effects = effects.effect(Effect::Mica)
-            } else if version.major == 10 {
-                effects = effects.effect(Effect::Acrylic)
-            } else {
-                effects = effects.effect(Effect::Blur);
+            effects = match version.major {
+                11.. => effects.effect(Effect::Mica),
+                10 if version.minor >= 22000 => effects.effect(Effect::Mica),
+                10 => effects.effect(Effect::Acrylic),
+                _ => effects,
             }
         }
 
@@ -42,7 +41,16 @@ impl WebviewWindowExt for WebviewWindow {
             effects = effects;
         }
 
-        self.set_effects(effects.build())?;
+        let _win_effects = self.set_effects(effects.build()).map_err(|_err| {
+            let mut fallback_effect = EffectsBuilder::new();
+
+            #[cfg(target_os = "windows")]
+            {
+                fallback_effect = fallback_effect.effect(Effect::Blur);
+
+                let _win_effects = self.set_effects(fallback_effect.build());
+            }
+        });
 
         Ok(self)
     }
