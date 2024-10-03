@@ -1,4 +1,4 @@
-use tauri::Manager;
+use tauri::{Emitter, Manager};
 use utils::window_ext::WebviewWindowExt;
 
 #[cfg(target_os = "macos")]
@@ -6,6 +6,12 @@ use tauri_plugin_decorum::WebviewWindowExt as DecorumWebviewWindowExt;
 
 mod commands;
 mod utils;
+
+#[derive(Clone, serde::Serialize)]
+struct Payload {
+    args: Vec<String>,
+    cwd: String,
+}
 
 pub fn run() {
     let mut builder = tauri::Builder::default();
@@ -41,11 +47,14 @@ pub fn run() {
             }
             _ => {}
         })
-        .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
+        .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
             if let Some(window) = app.get_webview_window("main-launcher") {
                 window.show().unwrap();
                 window.set_focus().unwrap();
             }
+
+            app.emit("single-instance", Payload { args: argv, cwd })
+                .unwrap();
         }))
         .plugin(tauri_plugin_system_info::init())
         .plugin(tauri_plugin_fs::init())
