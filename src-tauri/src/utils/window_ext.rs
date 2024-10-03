@@ -1,10 +1,10 @@
-use tauri::{window::EffectsBuilder, WebviewWindow};
+use tauri::{window::EffectsBuilder, Result, WebviewWindow};
 
 #[cfg(target_os = "macos")]
 use tauri::window::{Effect, EffectState};
 
 #[cfg(target_os = "windows")]
-use tauri::{window::Effect, Result};
+use tauri::window::Effect;
 #[cfg(target_os = "windows")]
 use windows_version::OsVersion;
 
