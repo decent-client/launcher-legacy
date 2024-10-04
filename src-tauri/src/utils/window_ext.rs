@@ -42,13 +42,13 @@ impl WebviewWindowExt for WebviewWindow {
         }
 
         let _win_effects = self.set_effects(effects.build()).map_err(|_err| {
-            let mut fallback_effect = EffectsBuilder::new();
+            let mut effects = EffectsBuilder::new();
 
             #[cfg(target_os = "windows")]
             {
-                fallback_effect = fallback_effect.effect(Effect::Blur);
+                effects = effects.effect(Effect::Blur);
 
-                let _win_effects = self.set_effects(fallback_effect.build());
+                let _win_effects = self.set_effects(effects.build());
             }
         });
 
