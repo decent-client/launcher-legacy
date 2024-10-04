@@ -1,5 +1,5 @@
 [package]
-name = "decent_client_launcher"
+name = "decent-client-launcher"
 version = "0.0.3"
 description = "Minecraft Launcher - Decent Client"
 authors = ["liqwtf"]
