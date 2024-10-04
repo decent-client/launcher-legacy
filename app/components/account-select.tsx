@@ -1,5 +1,6 @@
-import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Check, ExternalLink, Plus } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowRight, Check, ExternalLink, Plus, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { MicrosoftIcon } from "~/components/icons/microsoft";
 import { Button } from "~/components/ui/button";
 import {
@@ -18,20 +19,52 @@ import {
 } from "~/components/ui/tooltip";
 import { usePlayerTexture } from "~/hooks/player-texture";
 import { useSelectedAccount } from "~/lib/providers/account";
-import { setupAuth } from "~/lib/tauri";
+import { getPlayerFaceTexture, setupAuth } from "~/lib/tauri";
 import { cn } from "~/lib/utils";
 
 const MotionButton = motion.create(Button);
 
-export function AccountSelect({ className }: { className?: string }) {
-	const { accounts, selectedAccount, setSelectedAccount } =
-		useSelectedAccount();
+export function AccountSelect({
+	open,
+	onOpen,
+	className,
+}: { open: boolean; onOpen: (open: boolean) => void; className?: string }) {
+	const {
+		accounts,
+		selectedAccount,
+		appendAccount,
+		removeAccount,
+		setSelectedAccount,
+	} = useSelectedAccount();
 	const { headTexture: activeHeadTexture } = usePlayerTexture(
-		selectedAccount?.username,
+		selectedAccount?.profile.name,
 	);
 
+	const [textures, setTextures] = useState<Record<string, string>>({});
+
+	useEffect(() => {
+		async function getTextures() {
+			accounts.map(async (account) => {
+				const face = await getPlayerFaceTexture(account.profile.name);
+
+				setTextures((prevTexture) => ({
+					...prevTexture,
+					[account.profile.id]: face,
+				}));
+			});
+		}
+
+		getTextures();
+	}, [accounts]);
+
+	async function handleAuthentication() {
+		const result = await setupAuth();
+
+		appendAccount(result);
+	}
+
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={onOpen}>
 			<Tooltip>
 				<DialogTrigger asChild>
 					<TooltipTrigger asChild>
@@ -61,7 +94,7 @@ export function AccountSelect({ className }: { className?: string }) {
 									height={20}
 								/>
 								<span className="mt-0.5 font-minecraft text-minecraft-foreground">
-									{selectedAccount?.username ?? "Guest"}
+									{selectedAccount?.profile.name ?? "Guest"}
 								</span>
 							</div>
 							<ArrowRight
@@ -108,16 +141,13 @@ export function AccountSelect({ className }: { className?: string }) {
 				>
 					{accounts.length > 0 ? (
 						accounts.map((account) => {
-							// const { headTexture: accountHeadTexture } = usePlayerTexture(
-							// 	account.username,
-							// );
-
 							return (
 								<Button
-									key={account.username}
+									key={account.profile.id}
 									className={cn(
 										"group/account relative w-full justify-start gap-2.5 pl-1.5",
-										account.active && "bg-blue-500/25 hover:bg-blue-500/50",
+										account.state?.active &&
+											"cursor-default bg-blue-500/25 hover:bg-blue-500/50",
 									)}
 									variant={"ghost"}
 									size={"sm"}
@@ -126,22 +156,28 @@ export function AccountSelect({ className }: { className?: string }) {
 									}}
 								>
 									<img
-										// src={accountHeadTexture}
+										src={textures[account.profile.id]}
 										className="rounded-sm"
 										alt="Face"
 										width={20}
 										height={20}
 									/>
 									<span className="font-minecraft text-base transition-[margin] group-hover/account:ml-1">
-										{account.username}
+										{account.profile.name}
 									</span>
-									{account.active && (
+									{account.state?.active && (
 										<Check
-											className="absolute right-4"
+											className="absolute right-4 transition-[right] group-hover/account:right-12"
 											strokeWidth={2.5}
 											size={16}
 										/>
 									)}
+									<X
+										className="absolute right-4 cursor-pointer stroke-red-500 opacity-0 transition-opacity group-hover/account:opacity-100"
+										strokeWidth={2.5}
+										size={16}
+										onClick={() => removeAccount(account.profile.id, account)}
+									/>
 								</Button>
 							);
 						})
@@ -158,7 +194,7 @@ export function AccountSelect({ className }: { className?: string }) {
 							<Button
 								className="w-full gap-2"
 								variant={"secondary"}
-								onClick={() => setupAuth()}
+								onClick={() => handleAuthentication()}
 							>
 								<Plus size={16} strokeWidth={2.5} />
 								<span className="text-base">Add another Account</span>
