@@ -5,8 +5,6 @@ use tauri::{
 };
 
 pub fn create_tray<R: Runtime>(app: &AppHandle<R>) -> Result<()> {
-    let main_window = app.get_webview_window("main-launcher").unwrap();
-
     let _ = TrayIconBuilder::with_id("tray")
         .icon(app.default_window_icon().unwrap().clone())
         .menu(&Menu::with_items(
@@ -20,13 +18,11 @@ pub fn create_tray<R: Runtime>(app: &AppHandle<R>) -> Result<()> {
         .menu_on_left_click(false)
         .on_menu_event(move |app, event| match event.id.as_ref() {
             "home" => {
-                view_webview_window(app, "main-launcher");
-
-                println!("{:?}", main_window.url());
+                view_webview_window(app, "main-launcher", Some("/launcher"));
             }
 
             "settings" => {
-                view_webview_window(app, "main-launcher");
+                view_webview_window(app, "main-launcher", Some("/launcher/settings"));
             }
 
             "quit" => {
@@ -54,9 +50,15 @@ pub fn create_tray<R: Runtime>(app: &AppHandle<R>) -> Result<()> {
     Ok(())
 }
 
-fn view_webview_window<R: Runtime>(app: &AppHandle<R>, label: &str) {
-    if let Some(window) = app.get_webview_window(label) {
-        let _win_show = window.show();
-        let _win_focus = window.set_focus();
+fn view_webview_window<R: Runtime>(app: &AppHandle<R>, label: &str, path: Option<&str>) {
+    if let Some(mut window) = app.get_webview_window(label) {
+        window.show().unwrap();
+        window.set_focus().unwrap();
+
+        if let Some(p) = path {
+            window
+                .navigate(window.url().unwrap().join(p).expect("Parse Url path"))
+                .unwrap();
+        }
     }
 }
