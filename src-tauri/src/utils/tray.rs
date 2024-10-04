@@ -1,5 +1,5 @@
 use tauri::{
-    menu::{Menu, MenuItem},
+    menu::{Menu, MenuItem, PredefinedMenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
     AppHandle, Manager, Result, Runtime,
 };
@@ -12,7 +12,8 @@ pub fn create_tray<R: Runtime>(app: &AppHandle<R>) -> Result<()> {
             &[
                 &MenuItem::with_id(app, "home", "Launcher", true, None::<&str>)?,
                 &MenuItem::with_id(app, "settings", "Settings", true, None::<&str>)?,
-                &MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?,
+                &PredefinedMenuItem::separator(app)?,
+                &MenuItem::with_id(app, "quit", "Exit Launcher", true, None::<&str>)?,
             ],
         )?)
         .menu_on_left_click(false)
