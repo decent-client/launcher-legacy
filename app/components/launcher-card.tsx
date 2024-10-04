@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Rocket } from "lucide-react";
+import { useState } from "react";
 import { AccountSelect } from "~/components/account-select";
 import SkinView3D from "~/components/skin-viewer";
 import { Button } from "~/components/ui/button";
@@ -17,10 +18,13 @@ const MotionButton = motion.create(Button);
 
 export function LauncherCard({ className }: Readonly<{ className?: string }>) {
 	const { selectedAccount } = useSelectedAccount();
-	const { fullTexture, loading } = usePlayerTexture(selectedAccount?.username);
+	const { fullTexture, loading } = usePlayerTexture(
+		selectedAccount?.profile.name,
+	);
 	const {
 		newsFeedSection: { scrollY },
 	} = useLayout();
+	const [openDialog, setOpenDialog] = useState(false);
 
 	return (
 		<MotionCard
@@ -45,7 +49,11 @@ export function LauncherCard({ className }: Readonly<{ className?: string }>) {
 			<Backdrop />
 			<article className="relative z-10 grid place-items-center overflow-hidden">
 				{loading && <Skeleton className="absolute inset-0" />}
-				<AccountSelect className="absolute top-1 left-1 w-auto min-w-32" />
+				<AccountSelect
+					className="absolute top-1 left-1 w-auto min-w-32"
+					open={openDialog}
+					onOpen={setOpenDialog}
+				/>
 				<motion.div
 					className="absolute bg-transparent"
 					animate={{
@@ -56,6 +64,7 @@ export function LauncherCard({ className }: Readonly<{ className?: string }>) {
 					transition={{
 						bounce: 0,
 					}}
+					onDoubleClick={() => setOpenDialog(true)}
 				>
 					{!loading && (
 						<SkinView3D
@@ -108,20 +117,7 @@ function LaunchButton({
 function Backdrop() {
 	return (
 		<div className="absolute inset-0 overflow-hidden rounded-[inherit]">
-			{/* <SparklesCore
-        background="transparent"
-        minSize={0.6}
-        maxSize={1.4}
-        particleDensity={100}
-        className="absolute inset-0 blur-sm"
-        particleColor="#FFFFFF"
-      /> */}
 			<span className="pointer-events-none absolute inset-0 rounded-[inherit] backdrop-blur-sm" />
-			{/* <div className="absolute inset-0">
-        <Spline scene="https://prod.spline.design/jkiOe6OSWymmKUMb/scene.splinecode" />
-        <div className="absolute inset-0  opacity-20 mix-blend-multiply z-0" />
-      </div> */}
-			{/* <span className="pointer-events-none absolute inset-0 rounded-[inherit] backdrop-blur-[2px]" /> */}
 		</div>
 	);
 }

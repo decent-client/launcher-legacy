@@ -1,5 +1,8 @@
 import { invoke } from "@tauri-apps/api/core";
 import type { Window as CurrentWindow } from "@tauri-apps/api/window";
+import { toast } from "sonner";
+import { useSelectedAccount } from "~/lib/providers/account";
+import type { AuthenticationResponse } from "~/lib/types/auth";
 
 export async function setupWindows() {
 	await invoke("setup_windows");
@@ -11,7 +14,9 @@ export async function showSnapOverlay(window: CurrentWindow) {
 	});
 }
 
-export async function getPlayerFaceTexture(playerName: string) {
+export async function getPlayerFaceTexture(
+	playerName: string,
+): Promise<string> {
 	try {
 		return (await invoke("get_player_face", { playerName })) as string;
 	} catch (error) {
@@ -19,7 +24,7 @@ export async function getPlayerFaceTexture(playerName: string) {
 	}
 }
 
-export async function getPlayerTexture(playerName: string) {
+export async function getPlayerTexture(playerName: string): Promise<string> {
 	try {
 		return (await invoke("get_player_texture", { playerName })) as string;
 	} catch (error) {
@@ -27,6 +32,6 @@ export async function getPlayerTexture(playerName: string) {
 	}
 }
 
-export async function setupAuth() {
-	await invoke("setup_auth");
+export async function setupAuth(): Promise<AuthenticationResponse> {
+	return await invoke("setup_auth");
 }
