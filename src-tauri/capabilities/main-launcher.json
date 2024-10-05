@@ -21,7 +21,6 @@
 		"fs:allow-mkdir",
 		"fs:allow-read",
 		"fs:allow-write",
-		"system-info:default",
 		"system-info:allow-total-memory",
 		"os:allow-arch",
 		"os:allow-exe-extension",

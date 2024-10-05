@@ -18,9 +18,7 @@ const MotionButton = motion.create(Button);
 
 export function LauncherCard({ className }: Readonly<{ className?: string }>) {
 	const { selectedAccount } = useSelectedAccount();
-	const { fullTexture, loading } = usePlayerTexture(
-		selectedAccount?.profile.name,
-	);
+	const { fullTexture, loading } = usePlayerTexture(selectedAccount?.username);
 	const {
 		newsFeedSection: { scrollY },
 	} = useLayout();

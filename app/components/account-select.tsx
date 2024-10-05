@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Check, ExternalLink, Plus, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { MicrosoftIcon } from "~/components/icons/microsoft";
@@ -32,12 +32,12 @@ export function AccountSelect({
 	const {
 		accounts,
 		selectedAccount,
-		appendAccount,
+		addAccount,
 		removeAccount,
 		setSelectedAccount,
 	} = useSelectedAccount();
 	const { headTexture: activeHeadTexture } = usePlayerTexture(
-		selectedAccount?.profile.name,
+		selectedAccount?.username,
 	);
 
 	const [textures, setTextures] = useState<Record<string, string>>({});
@@ -45,11 +45,11 @@ export function AccountSelect({
 	useEffect(() => {
 		async function getTextures() {
 			accounts.map(async (account) => {
-				const face = await getPlayerFaceTexture(account.profile.name);
+				const face = await getPlayerFaceTexture(account.username);
 
 				setTextures((prevTexture) => ({
 					...prevTexture,
-					[account.profile.id]: face,
+					[account.uuid]: face,
 				}));
 			});
 		}
@@ -58,9 +58,7 @@ export function AccountSelect({
 	}, [accounts]);
 
 	async function handleAuthentication() {
-		const result = await setupAuth();
-
-		appendAccount(result);
+		addAccount(await setupAuth());
 	}
 
 	return (
@@ -94,7 +92,7 @@ export function AccountSelect({
 									height={20}
 								/>
 								<span className="mt-0.5 font-minecraft text-minecraft-foreground">
-									{selectedAccount?.profile.name ?? "Guest"}
+									{selectedAccount?.username ?? "Guest"}
 								</span>
 							</div>
 							<ArrowRight
@@ -142,43 +140,56 @@ export function AccountSelect({
 					{accounts.length > 0 ? (
 						accounts.map((account) => {
 							return (
-								<Button
-									key={account.profile.id}
-									className={cn(
-										"group/account relative w-full justify-start gap-2.5 pl-1.5",
-										account.state?.active &&
-											"cursor-default bg-blue-500/25 hover:bg-blue-500/50",
-									)}
-									variant={"ghost"}
-									size={"sm"}
-									onClick={() => {
-										setSelectedAccount(account);
+								<motion.div
+									key={account.uuid}
+									className="grid overflow-hidden rounded-md"
+									initial={{ gridTemplateColumns: "1fr 0rem" }}
+									whileHover={{
+										gridTemplateColumns: "1fr 2.25rem",
 									}}
 								>
-									<img
-										src={textures[account.profile.id]}
-										className="rounded-sm"
-										alt="Face"
-										width={20}
-										height={20}
-									/>
-									<span className="font-minecraft text-base transition-[margin] group-hover/account:ml-1">
-										{account.profile.name}
-									</span>
-									{account.state?.active && (
-										<Check
-											className="absolute right-4 transition-[right] group-hover/account:right-12"
+									<Button
+										className={cn(
+											"group/account relative w-full justify-start gap-2.5 pl-1.5",
+											account.active && " bg-blue-500/25 hover:bg-blue-500/50",
+										)}
+										variant={"ghost"}
+										size={"sm"}
+										onClick={() => {
+											setSelectedAccount(account);
+										}}
+									>
+										<img
+											src={textures[account.uuid]}
+											className="rounded-sm"
+											alt="Face"
+											width={20}
+											height={20}
+										/>
+										<span className="font-minecraft text-base transition-[margin] group-hover/account:ml-1">
+											{account.username}
+										</span>
+										{account.active && (
+											<Check
+												className="absolute right-4"
+												strokeWidth={2.5}
+												size={16}
+											/>
+										)}
+									</Button>
+									<Button
+										className="ml-1 size-8 p-0"
+										variant={"secondary"}
+										size={"sm"}
+										onClick={() => removeAccount(account)}
+									>
+										<X
+											className=" stroke-red-500"
 											strokeWidth={2.5}
 											size={16}
 										/>
-									)}
-									<X
-										className="absolute right-4 cursor-pointer stroke-red-500 opacity-0 transition-opacity group-hover/account:opacity-100"
-										strokeWidth={2.5}
-										size={16}
-										onClick={() => removeAccount(account.profile.id, account)}
-									/>
-								</Button>
+									</Button>
+								</motion.div>
 							);
 						})
 					) : (
