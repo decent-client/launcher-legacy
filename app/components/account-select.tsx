@@ -21,6 +21,7 @@ import { usePlayerTexture } from "~/hooks/player-texture";
 import { useSelectedAccount } from "~/lib/providers/account";
 import { getPlayerFaceTexture, setupAuth } from "~/lib/tauri";
 import { cn } from "~/lib/utils";
+import { Separator } from "./ui/separator";
 
 const MotionButton = motion.create(Button);
 
@@ -115,28 +116,7 @@ export function AccountSelect({
 						Select an existing account, or add a new one.
 					</DialogDescription>
 				</DialogHeader>
-				<motion.div
-					className="space-y-1"
-					// @ts-ignore - framer-motion
-					initial={{ "--x": "100%", scale: 1 }}
-					// @ts-ignore - framer-motion
-					animate={{ "--x": "-100%" }}
-					transition={{
-						repeat: Number.POSITIVE_INFINITY,
-						repeatType: "loop",
-						repeatDelay: 1,
-						type: "spring",
-						stiffness: 20,
-						damping: 15,
-						mass: 2,
-						scale: {
-							type: "spring",
-							stiffness: 10,
-							damping: 5,
-							mass: 0.1,
-						},
-					}}
-				>
+				<div className="space-y-1">
 					{accounts.length > 0 ? (
 						accounts.map((account) => {
 							return (
@@ -197,8 +177,8 @@ export function AccountSelect({
 							You do not have any accounts added.
 						</div>
 					)}
-				</motion.div>
-				{/* <Separator /> */}
+				</div>
+				<Separator className="bg-gradient-to-r bg-transparent from-transparent via-border to-transparent" />
 				<DialogFooter>
 					<Tooltip>
 						<TooltipTrigger asChild>
