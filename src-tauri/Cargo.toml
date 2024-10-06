@@ -1,6 +1,6 @@
 [package]
 name = "decent-client-launcher"
-version = "0.0.3"
+version = "0.0.1"
 description = "Minecraft Launcher - Decent Client"
 authors = ["liqwtf"]
 license = "MIT"
