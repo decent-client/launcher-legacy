@@ -2,8 +2,8 @@ name: 'Publish Launcher'
 
 on:
   push:
-    tags:
-      - 'v*'
+    tags: 
+      - 'v**'
   workflow_dispatch:
         
 jobs:
