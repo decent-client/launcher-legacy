@@ -240,5 +240,5 @@ function CaptionControlGroup({
 	children: React.ReactNode;
 	className?: string;
 }) {
-	return <nav className={cn("flex", className)}>{children}</nav>;
+	return <fieldset className={cn("flex", className)}>{children}</fieldset>;
 }

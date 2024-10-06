@@ -13,25 +13,15 @@ import {
 	useState,
 } from "react";
 import { toast } from "sonner";
-import type {
-	AuthenticationResponse,
-	MinecraftResponse,
-} from "~/lib/types/auth";
-import { getPlayerFaceTexture } from "../tauri";
-
-export type Account = AuthenticationResponse;
+import type { MinecraftAccount } from "~/lib/types/auth";
 
 type SelectedAccountState = {
-	accounts: Account[];
-	setAccounts: (value: Account[]) => void;
-	appendAccount: (value: Account) => void;
-	selectedAccount: Account | undefined;
-	setSelectedAccount: (value: Account) => void;
-	removeAccount: (uuid: string, account?: Account) => void;
-};
-
-type FileStructure = {
-	accounts: Account[] | [];
+	accounts: MinecraftAccount[];
+	setAccounts: (value: MinecraftAccount[]) => void;
+	selectedAccount: MinecraftAccount | undefined;
+	setSelectedAccount: (value: MinecraftAccount) => void;
+	addAccount: (value: MinecraftAccount) => void;
+	removeAccount: (value: MinecraftAccount) => void;
 };
 
 const AccountProviderContext = createContext<SelectedAccountState | null>(null);
@@ -46,16 +36,16 @@ export function SelectedAccountProvider({
 	children: React.ReactNode;
 	accountsFile?: FileNameJSON;
 }) {
-	const [accounts, setAccounts] = useState<Account[] | []>([]);
+	const [accounts, setAccounts] = useState<MinecraftAccount[]>([]);
 
-	let selectedAccount = accounts.find((account) => account.state?.active);
+	const selectedAccount = accounts.find((account) => account.active);
 
 	useEffect(() => {
 		async function initAccounts() {
-			const result = await getAccountsFile(accountsFile);
+			const results = await getAccountsFile(accountsFile);
 
-			if (result) {
-				setAccounts(result.accounts);
+			if (results) {
+				setAccounts(results);
 			}
 		}
 
@@ -63,20 +53,14 @@ export function SelectedAccountProvider({
 	}, []);
 
 	useEffect(() => {
-		async function writeAccountsFile() {
-			await writeTextFile(
-				accountsFile,
-				JSON.stringify({ accounts } as FileStructure, null, 2),
-				{
-					baseDir: BaseDirectory.AppData,
-				},
-			);
+		async function writeAccountsFile(content: MinecraftAccount[]) {
+			await writeTextFile(accountsFile, JSON.stringify(content, null, 2), {
+				baseDir: BaseDirectory.AppData,
+			});
 		}
 
-		console.log(accounts);
-
 		if (accounts.length > 0) {
-			writeAccountsFile();
+			writeAccountsFile(accounts);
 		}
 
 		if (!selectedAccount && accounts.length > 0) {
@@ -84,75 +68,45 @@ export function SelectedAccountProvider({
 		}
 	}, [accounts]);
 
-	async function setSelectedAccount(value: Account) {
-		const updatedAccounts = updateAccounts(accounts, value);
-		const preservedState = accounts;
+	async function setSelectedAccount(value: MinecraftAccount) {
+		setAccounts(selectAccount(value));
+	}
 
-		setAccounts(updatedAccounts);
+	async function addAccount(value: MinecraftAccount) {
+		const filteredAccounts = [...accounts, value].filter(
+			(value, index, self) =>
+				index === self.findIndex((t) => t.uuid === value.uuid),
+		);
 
-		let caughtError = false;
+		if (accounts.find((account) => account.uuid === value.uuid)) {
+			setSelectedAccount(value);
+			return toast.warning(`The account "${value.username}" already exists`);
+		}
 
 		try {
-			console.log("");
-			// TODO: validate switch with refresh token
-		} catch (error) {
-			toast.error("Failed to switch accounts");
-
-			caughtError = true;
+			setAccounts(filteredAccounts);
 		} finally {
-			if (!caughtError) {
-				selectedAccount = value;
-				setAccounts(updatedAccounts);
-			} else {
-				setAccounts(preservedState);
-			}
+			toast.success("Authentication Successful");
 		}
 	}
 
-	async function appendAccount(value: Account) {
-		const filterAccounts = [...accounts, value].filter(
-			(value, index, self) =>
-				index === self.findIndex((t) => t.profile.id === value.profile.id),
-		);
+	async function removeAccount(account: MinecraftAccount) {
+		const filteredAccounts = [...accounts].filter((v) => v !== account);
 
-		if (accounts.find((account) => account.profile.id === value.profile.id)) {
-			return toast.warning(
-				`The account "${value.profile.name}" already exists`,
-			);
+		console.log(filteredAccounts);
+
+		try {
+			setAccounts(filteredAccounts);
+		} finally {
+			toast.success(`Successfully removed the account "${account.username}"`);
 		}
-
-		setAccounts(filterAccounts);
-
-		toast.success("Authentication Successful");
 	}
 
-	async function removeAccount(uuid: string, account?: Account) {
-		const filterAccounts = accounts.filter(
-			(account) => account.profile.id !== uuid,
-		);
-
-		setAccounts(filterAccounts);
-
-		toast.success(
-			account
-				? `Successfully removed the account "${account.profile.name}"`
-				: "Account successfully removed",
-		);
-	}
-
-	function updateAccounts(
-		accounts: Account[],
-		newAccount: Account,
-		identifier: keyof MinecraftResponse = "id",
-	) {
-		return accounts.map((account) =>
-			deepmerge(account, {
-				state: {
-					active:
-						account.profile[identifier] === newAccount.profile[identifier],
-				},
-			} as Account),
-		);
+	function selectAccount(toSelect: MinecraftAccount) {
+		return accounts.map((account) => ({
+			...account,
+			active: account.uuid === toSelect.uuid,
+		}));
 	}
 
 	return (
@@ -160,9 +114,9 @@ export function SelectedAccountProvider({
 			value={{
 				accounts,
 				setAccounts,
-				appendAccount,
 				selectedAccount,
 				setSelectedAccount,
+				addAccount,
 				removeAccount,
 			}}
 			{...props}
@@ -189,7 +143,7 @@ async function getAccountsFile(fileName: FileNameJSON) {
 			await readTextFile(fileName, {
 				baseDir: BaseDirectory.AppData,
 			}),
-		) as FileStructure;
+		) as MinecraftAccount[];
 	}
 
 	try {
@@ -197,13 +151,9 @@ async function getAccountsFile(fileName: FileNameJSON) {
 		// 	await mkdir(await appDataDir());
 		// }
 
-		await writeTextFile(
-			fileName,
-			JSON.stringify({ accounts: [] } as FileStructure),
-			{
-				baseDir: BaseDirectory.AppData,
-			},
-		);
+		await writeTextFile(fileName, JSON.stringify([]), {
+			baseDir: BaseDirectory.AppData,
+		});
 	} catch (error) {
 		console.error("Error creating settings file: ", error);
 	}

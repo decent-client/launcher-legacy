@@ -1,6 +1,6 @@
 [package]
 name = "decent-client-launcher"
-version = "0.0.3"
+version = "0.0.1"
 description = "Minecraft Launcher - Decent Client"
 authors = ["liqwtf"]
 license = "MIT"
@@ -25,15 +25,17 @@ reqwest = { version = "0.12.8", features = ["json"] }
 tokio = { version = "1", features = ["full"] }
 minecraft-essentials = {version = "0.2.11", features = [] }
 tauri-plugin-system-info = "2.0.5"
-tauri-plugin-single-instance = "2.0.0"
+tauri-plugin-single-instance = "2.0.1"
 tauri-plugin-window-state = "2.0.1"
 tauri-plugin-fs = "2.0.0"
-tauri-plugin-os = "2.0.0"
+tauri-plugin-os = "2.0.1"
 windows-version = "0.1.0"
 oauth2 = "4.4.2"
 image = "0.25"
 base64 = "0.22"
 open = "5.3.0"
+tauri-plugin-http = "2"
+tauri-plugin-dialog = "2"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 tauri-plugin-decorum = "1.1.1"

@@ -14,7 +14,14 @@
 		"core:window:allow-toggle-maximize",
 		"core:window:allow-internal-toggle-maximize",
 		"core:webview:allow-create-webview-window",
-		"system-info:default",
-		"system-info:allow-total-memory"
+		"system-info:allow-total-memory",
+		"http:default",
+		"http:allow-fetch",
+		{
+			"identifier": "http:default",
+			"allow": [
+				{ "url": "https://api.minecraftservices.com/minecraft/profile" }
+			]
+		}
 	]
 }

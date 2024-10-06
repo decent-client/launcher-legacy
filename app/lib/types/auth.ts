@@ -1,19 +1,20 @@
-export type AuthenticationData = {
+import type { DeepCamelKeys } from "string-ts";
+
+export type AuthenticationResponse = {
 	access_token: string;
 	uuid: string;
 	expires_in: number;
 	xts_token?: string;
 };
 
-export type MinecraftResponse = {
+export type MinecraftProfileResponse = {
 	id: string;
 	name: string;
 };
 
-export type AuthenticationResponse = {
-	auth_data: AuthenticationData;
-	profile: MinecraftResponse;
-	state?: {
-		active: boolean;
-	};
+export type MinecraftAccount = {
+	uuid: string;
+	username: string;
+	authentication: DeepCamelKeys<AuthenticationResponse>;
+	active?: boolean;
 };

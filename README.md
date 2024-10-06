@@ -1,6 +1,7 @@
 # Decent Client - Launcher 🚀
 
 ## Features 
+
 1. TODO
 
 ## Development
@@ -21,6 +22,11 @@ Before you being, ensure you have the following installed on your system
 2. Run `bun install` to install the dependencies
 3. Run `bun tauri dev` to start the development server
    - This will open a new window on your system.
+
+## Project Structure
+
+1. Uses Biome.js for linting and formatting.
+2. TODO
 
 ## Contributing
 

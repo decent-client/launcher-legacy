@@ -1,8 +1,12 @@
 import { invoke } from "@tauri-apps/api/core";
 import type { Window as CurrentWindow } from "@tauri-apps/api/window";
-import { toast } from "sonner";
-import { useSelectedAccount } from "~/lib/providers/account";
-import type { AuthenticationResponse } from "~/lib/types/auth";
+import { fetch } from "@tauri-apps/plugin-http";
+import { deepCamelKeys } from "string-ts";
+import type {
+	AuthenticationResponse,
+	MinecraftAccount,
+	MinecraftProfileResponse,
+} from "~/lib/types/auth";
 
 export async function setupWindows() {
 	await invoke("setup_windows");
@@ -32,6 +36,24 @@ export async function getPlayerTexture(playerName: string): Promise<string> {
 	}
 }
 
-export async function setupAuth(): Promise<AuthenticationResponse> {
-	return await invoke("setup_auth");
+export async function setupAuth(): Promise<MinecraftAccount> {
+	const authResult = deepCamelKeys(
+		(await invoke("setup_auth")) as AuthenticationResponse,
+	);
+
+	const profileResponse: MinecraftProfileResponse = await fetch(
+		"https://api.minecraftservices.com/minecraft/profile",
+		{
+			method: "GET",
+			headers: new Headers({
+				Authorization: `Bearer ${authResult.accessToken}`,
+			}),
+		},
+	).then((response) => response.json());
+
+	return {
+		uuid: profileResponse.id,
+		username: profileResponse.name,
+		authentication: authResult,
+	};
 }

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Check, ExternalLink, Plus, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { MicrosoftIcon } from "~/components/icons/microsoft";
@@ -21,6 +21,7 @@ import { usePlayerTexture } from "~/hooks/player-texture";
 import { useSelectedAccount } from "~/lib/providers/account";
 import { getPlayerFaceTexture, setupAuth } from "~/lib/tauri";
 import { cn } from "~/lib/utils";
+import { Separator } from "./ui/separator";
 
 const MotionButton = motion.create(Button);
 
@@ -32,12 +33,12 @@ export function AccountSelect({
 	const {
 		accounts,
 		selectedAccount,
-		appendAccount,
+		addAccount,
 		removeAccount,
 		setSelectedAccount,
 	} = useSelectedAccount();
 	const { headTexture: activeHeadTexture } = usePlayerTexture(
-		selectedAccount?.profile.name,
+		selectedAccount?.username,
 	);
 
 	const [textures, setTextures] = useState<Record<string, string>>({});
@@ -45,11 +46,11 @@ export function AccountSelect({
 	useEffect(() => {
 		async function getTextures() {
 			accounts.map(async (account) => {
-				const face = await getPlayerFaceTexture(account.profile.name);
+				const face = await getPlayerFaceTexture(account.username);
 
 				setTextures((prevTexture) => ({
 					...prevTexture,
-					[account.profile.id]: face,
+					[account.uuid]: face,
 				}));
 			});
 		}
@@ -58,9 +59,7 @@ export function AccountSelect({
 	}, [accounts]);
 
 	async function handleAuthentication() {
-		const result = await setupAuth();
-
-		appendAccount(result);
+		addAccount(await setupAuth());
 	}
 
 	return (
@@ -94,7 +93,7 @@ export function AccountSelect({
 									height={20}
 								/>
 								<span className="mt-0.5 font-minecraft text-minecraft-foreground">
-									{selectedAccount?.profile.name ?? "Guest"}
+									{selectedAccount?.username ?? "Guest"}
 								</span>
 							</div>
 							<ArrowRight
@@ -117,68 +116,60 @@ export function AccountSelect({
 						Select an existing account, or add a new one.
 					</DialogDescription>
 				</DialogHeader>
-				<motion.div
-					className="space-y-1"
-					// @ts-ignore - framer-motion
-					initial={{ "--x": "100%", scale: 1 }}
-					// @ts-ignore - framer-motion
-					animate={{ "--x": "-100%" }}
-					transition={{
-						repeat: Number.POSITIVE_INFINITY,
-						repeatType: "loop",
-						repeatDelay: 1,
-						type: "spring",
-						stiffness: 20,
-						damping: 15,
-						mass: 2,
-						scale: {
-							type: "spring",
-							stiffness: 10,
-							damping: 5,
-							mass: 0.1,
-						},
-					}}
-				>
+				<div className="space-y-1">
 					{accounts.length > 0 ? (
 						accounts.map((account) => {
 							return (
-								<Button
-									key={account.profile.id}
-									className={cn(
-										"group/account relative w-full justify-start gap-2.5 pl-1.5",
-										account.state?.active &&
-											"cursor-default bg-blue-500/25 hover:bg-blue-500/50",
-									)}
-									variant={"ghost"}
-									size={"sm"}
-									onClick={() => {
-										setSelectedAccount(account);
+								<motion.div
+									key={account.uuid}
+									className="grid overflow-hidden rounded-md"
+									initial={{ gridTemplateColumns: "1fr 0rem" }}
+									whileHover={{
+										gridTemplateColumns: "1fr 2.25rem",
 									}}
 								>
-									<img
-										src={textures[account.profile.id]}
-										className="rounded-sm"
-										alt="Face"
-										width={20}
-										height={20}
-									/>
-									<span className="font-minecraft text-base transition-[margin] group-hover/account:ml-1">
-										{account.profile.name}
-									</span>
-									{account.state?.active && (
-										<Check
-											className="absolute right-4 transition-[right] group-hover/account:right-12"
+									<Button
+										className={cn(
+											"group/account relative w-full justify-start gap-2.5 pl-1.5",
+											account.active && " bg-blue-500/25 hover:bg-blue-500/50",
+										)}
+										variant={"ghost"}
+										size={"sm"}
+										onClick={() => {
+											setSelectedAccount(account);
+										}}
+									>
+										<img
+											src={textures[account.uuid]}
+											className="rounded-sm"
+											alt="Face"
+											width={20}
+											height={20}
+										/>
+										<span className="font-minecraft text-base transition-[margin] group-hover/account:ml-1">
+											{account.username}
+										</span>
+										{account.active && (
+											<Check
+												className="absolute right-4"
+												strokeWidth={2.5}
+												size={16}
+											/>
+										)}
+									</Button>
+									<Button
+										className="ml-1 size-8 p-0"
+										variant={"secondary"}
+										size={"sm"}
+										onClick={() => removeAccount(account)}
+									>
+										<X
+											className=" stroke-red-500"
 											strokeWidth={2.5}
 											size={16}
 										/>
-									)}
-									<X
-										className="absolute right-4 cursor-pointer stroke-red-500 opacity-0 transition-opacity group-hover/account:opacity-100"
-										strokeWidth={2.5}
-										size={16}
-										onClick={() => removeAccount(account.profile.id, account)}
-									/>
-								</Button>
+									</Button>
+								</motion.div>
 							);
 						})
 					) : (
@@ -186,8 +177,8 @@ export function AccountSelect({
 							You do not have any accounts added.
 						</div>
 					)}
-				</motion.div>
-				{/* <Separator /> */}
+				</div>
+				<Separator className="bg-gradient-to-r bg-transparent from-transparent via-border to-transparent" />
 				<DialogFooter>
 					<Tooltip>
 						<TooltipTrigger asChild>

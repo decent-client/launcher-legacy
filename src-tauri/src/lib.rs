@@ -58,7 +58,9 @@ pub fn run() {
         }))
         .plugin(tauri_plugin_system_info::init())
         .plugin(tauri_plugin_fs::init())
-        .plugin(tauri_plugin_os::init());
+        .plugin(tauri_plugin_os::init())
+        .plugin(tauri_plugin_http::init())
+        .plugin(tauri_plugin_dialog::init());
 
     #[cfg(target_os = "macos")]
     {
