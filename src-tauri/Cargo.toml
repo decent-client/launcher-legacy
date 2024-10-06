@@ -26,7 +26,7 @@ tokio = { version = "1", features = ["full"] }
 minecraft-essentials = {version = "0.2.11", features = [] }
 tauri-plugin-system-info = "2.0.5"
 tauri-plugin-single-instance = "2.0.1"
-tauri-plugin-window-state = "2.0.0"
+tauri-plugin-window-state = "2.0.1"
 tauri-plugin-fs = "2.0.0"
 tauri-plugin-os = "2.0.1"
 windows-version = "0.1.0"
