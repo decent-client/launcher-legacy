@@ -1,4 +1,4 @@
-# Decent Client - Launcher 🚀
+<h1 align="center">Decent Client - Launcher 🚀</h1>
 
 ## Features 
 
