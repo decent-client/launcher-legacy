@@ -14,9 +14,47 @@
 		"core:window:allow-toggle-maximize",
 		"core:window:allow-internal-toggle-maximize",
 		"core:webview:allow-create-webview-window",
+		"core:path:default",
+		"core:path:allow-resolve-directory",
+		"core:path:allow-basename",
+		"core:path:allow-dirname",
 		"system-info:allow-total-memory",
+		"fs:default",
+		"fs:allow-write-text-file",
+		"fs:allow-read-text-file",
+		"fs:allow-exists",
+		"fs:allow-open",
+		"fs:allow-appdata-write",
+		"fs:allow-appdata-write-recursive",
+		"fs:allow-appdata-read",
+		"fs:allow-appdata-read-recursive",
+		"fs:allow-mkdir",
+		"fs:allow-read",
+		"fs:allow-write",
+		"os:allow-arch",
+		"os:allow-exe-extension",
+		"os:allow-family",
+		"os:allow-locale",
+		"os:allow-os-type",
+		"os:allow-platform",
+		"os:allow-version",
+		"window-state:default",
+		"window-state:allow-restore-state",
+		"window-state:allow-save-window-state",
 		"http:default",
 		"http:allow-fetch",
+		{
+			"identifier": "fs:allow-exists",
+			"allow": [{ "path": "$APPDATA/*" }]
+		},
+		{
+			"identifier": "fs:allow-write-text-file",
+			"allow": [{ "path": "$APPDATA/launcher-settings.json" }]
+		},
+		{
+			"identifier": "fs:allow-read-text-file",
+			"allow": [{ "path": "$APPDATA/launcher-settings.json" }]
+		},
 		{
 			"identifier": "http:default",
 			"allow": [
