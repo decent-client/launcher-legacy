@@ -13,7 +13,7 @@ pub fn create_tray<R: Runtime>(app: &AppHandle<R>) -> Result<()> {
                 &MenuItem::with_id(app, "home", "Launcher", true, None::<&str>)?,
                 &MenuItem::with_id(app, "settings", "Settings", true, None::<&str>)?,
                 &PredefinedMenuItem::separator(app)?,
-                &MenuItem::with_id(app, "quit", "Exit Launcher", true, None::<&str>)?,
+                &MenuItem::with_id(app, "exit", "Exit Launcher", true, None::<&str>)?,
             ],
         )?)
         .menu_on_left_click(false)
@@ -26,7 +26,7 @@ pub fn create_tray<R: Runtime>(app: &AppHandle<R>) -> Result<()> {
                 view_webview_window(app, "main-launcher", Some("/launcher/settings"));
             }
 
-            "quit" => {
+            "exit" => {
                 app.exit(0);
             }
 
