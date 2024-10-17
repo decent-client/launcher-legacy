@@ -5213,9 +5213,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-system-info"
-version = "2.0.5"
+version = "2.0.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0c74487db9023a777691c748e7038d92c3232c06cda1e6cedaaed65635888423"
+checksum = "9fe5f4566a6cdb352a20e6f85d9813225093b3d902cbb1c29d597411bce0f9b1"
 dependencies = [
  "serde",
  "starship-battery",
