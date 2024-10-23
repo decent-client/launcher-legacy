@@ -37,7 +37,6 @@ export function SelectedAccountProvider({
 	accountsFile?: FileNameJSON;
 }) {
 	const [accounts, setAccounts] = useState<MinecraftAccount[]>([]);
-
 	const selectedAccount = accounts.find((account) => account.active);
 
 	useEffect(() => {
