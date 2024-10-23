@@ -162,7 +162,7 @@ function AccountRow({ account }: { account: MinecraftAccount }) {
 			<Button
 				className={cn(
 					"group/account relative w-full justify-start gap-2.5 pl-1.5",
-					account.active && " bg-blue-500/25 hover:bg-blue-500/50",
+					account.active && "bg-blue-500/25 hover:bg-blue-500/50",
 				)}
 				variant={"ghost"}
 				size={"sm"}
