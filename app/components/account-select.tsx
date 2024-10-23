@@ -20,6 +20,7 @@ import {
 import { usePlayerTexture } from "~/hooks/player-texture";
 import { useSelectedAccount } from "~/lib/providers/account";
 import { getPlayerFaceTexture, setupAuth } from "~/lib/tauri";
+import type { MinecraftAccount } from "~/lib/types/auth";
 import { cn } from "~/lib/utils";
 import { Separator } from "./ui/separator";
 
@@ -30,13 +31,7 @@ export function AccountSelect({
 	onOpen,
 	className,
 }: { open: boolean; onOpen: (open: boolean) => void; className?: string }) {
-	const {
-		accounts,
-		selectedAccount,
-		addAccount,
-		removeAccount,
-		setSelectedAccount,
-	} = useSelectedAccount();
+	const { accounts, selectedAccount, addAccount } = useSelectedAccount();
 	const { headTexture: activeHeadTexture } = usePlayerTexture(
 		selectedAccount?.username,
 	);
@@ -118,60 +113,9 @@ export function AccountSelect({
 				</DialogHeader>
 				<div className="space-y-1">
 					{accounts.length > 0 ? (
-						accounts.map((account) => {
-							return (
-								<motion.div
-									key={account.uuid}
-									className="grid overflow-hidden rounded-md"
-									initial={{ gridTemplateColumns: "1fr 0rem" }}
-									whileHover={{
-										gridTemplateColumns: "1fr 2.25rem",
-									}}
-								>
-									<Button
-										className={cn(
-											"group/account relative w-full justify-start gap-2.5 pl-1.5",
-											account.active && " bg-blue-500/25 hover:bg-blue-500/50",
-										)}
-										variant={"ghost"}
-										size={"sm"}
-										onClick={() => {
-											setSelectedAccount(account);
-										}}
-									>
-										<img
-											src={textures[account.uuid]}
-											className="rounded-sm"
-											alt="Face"
-											width={20}
-											height={20}
-										/>
-										<span className="font-minecraft text-base transition-[margin] group-hover/account:ml-1">
-											{account.username}
-										</span>
-										{account.active && (
-											<Check
-												className="absolute right-4"
-												strokeWidth={2.5}
-												size={16}
-											/>
-										)}
-									</Button>
-									<Button
-										className="ml-1 size-8 p-0"
-										variant={"secondary"}
-										size={"sm"}
-										onClick={() => removeAccount(account)}
-									>
-										<X
-											className=" stroke-red-500"
-											strokeWidth={2.5}
-											size={16}
-										/>
-									</Button>
-								</motion.div>
-							);
-						})
+						accounts.map((account) => (
+							<AccountRow key={account.uuid} account={account} />
+						))
 					) : (
 						<div className="px-8 py-6 text-center font-normal text-base">
 							You do not have any accounts added.
@@ -199,5 +143,55 @@ export function AccountSelect({
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
+	);
+}
+
+function AccountRow({ account }: { account: MinecraftAccount }) {
+	const { setSelectedAccount, removeAccount } = useSelectedAccount();
+	const { headTexture } = usePlayerTexture(account.username);
+
+	return (
+		<motion.fieldset
+			key={account.uuid}
+			className="grid overflow-hidden rounded-md"
+			initial={{ gridTemplateColumns: "1fr 0rem" }}
+			whileHover={{
+				gridTemplateColumns: "1fr 2.25rem",
+			}}
+		>
+			<Button
+				className={cn(
+					"group/account relative w-full justify-start gap-2.5 pl-1.5",
+					account.active && "bg-blue-500/25 hover:bg-blue-500/50",
+				)}
+				variant={"ghost"}
+				size={"sm"}
+				onClick={() => {
+					setSelectedAccount(account);
+				}}
+			>
+				<img
+					src={headTexture}
+					className="rounded-sm"
+					alt="Face"
+					width={20}
+					height={20}
+				/>
+				<span className="font-minecraft text-base transition-[margin] group-hover/account:ml-1">
+					{account.username}
+				</span>
+				{account.active && (
+					<Check className="absolute right-4" strokeWidth={2.5} size={16} />
+				)}
+			</Button>
+			<Button
+				className="ml-1 size-8 p-0"
+				variant={"secondary"}
+				size={"sm"}
+				onClick={() => removeAccount(account)}
+			>
+				<X className=" stroke-red-500" strokeWidth={2.5} size={16} />
+			</Button>
+		</motion.fieldset>
 	);
 }
